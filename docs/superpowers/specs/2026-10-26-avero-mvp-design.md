@@ -24,21 +24,65 @@ Il s'agit d'un **MVP** : pas de paiement, pas de tâche planifiée.
 | Paiement | Aucun. La marque choisit son plan en un clic sur la page « Plans ». Le code isole ce changement de plan pour brancher Stripe plus tard |
 | Visibilité | Une marque voit tous les créateurs ayant au moins un réseau connecté |
 | Langue | Interface en français uniquement |
-| Ordre de construction | Interface d'abord (avec données fictives), puis backend |
+| Ordre de construction | **Une application uniquement frontend d'abord** (landing, connexion, espaces créateur et marque avec données fictives), puis le backend |
+| Direction artistique | Élégante, moderne, premium (section 3.2) |
+| Animations | GSAP (ScrollTrigger, SplitText) + défilement fluide Lenis sur la landing ; animations sobres dans les espaces connectés |
 
 ## 3. Pages
 
 | Rôle | Route | Contenu |
 |---|---|---|
-| Public | `/` | Présentation, boutons « Je suis créateur » / « Je suis une marque » |
-| Public | `/inscription?role=createur\|marque` | Formulaire d'inscription (nom d'affichage ou nom d'entreprise, e-mail, mot de passe) |
-| Public | `/connexion` | Formulaire de connexion |
+| Public | `/` | Landing (section 3.1) |
+| Public | `/connexion` | Page de connexion dédiée, liée depuis le menu, le hero et le footer de la landing. Onglets « Créateur » / « Marque » qui adaptent le texte et le lien d'inscription. Panneau visuel animé à côté du formulaire |
+| Public | `/inscription?role=createur\|marque` | Formulaire d'inscription (nom d'affichage ou nom d'entreprise, e-mail, mot de passe), même mise en page que `/connexion` |
+| Public | `/mentions-legales` | Mentions légales : éditeur, directeur de publication, hébergement, données personnelles (RGPD), cookies, propriété intellectuelle. Les informations sur l'éditeur sont marquées « [À compléter] » jusqu'à ce que l'utilisateur les fournisse |
 | Créateur | `/createur` | Tableau de bord : KPI par réseau et cumulés, graphiques, publications, audience |
 | Créateur | `/createur/reseaux` | Connexion / déconnexion Instagram et TikTok, état, date de dernière mise à jour, bouton « Actualiser » |
 | Marque | `/marque` | Liste des créateurs, tri (et filtres en BASIC+) ; colonnes selon le plan |
 | Marque | `/marque/createurs/[id]` | Fiche créateur détaillée (PREMIUM) |
 | Marque | `/marque/comparer?ids=…` | Comparaison de 2 à 4 créateurs (PREMIUM) |
 | Marque | `/marque/plans` | Choix FREE / BASIC / PREMIUM |
+
+### 3.1 Landing (`/`)
+
+Blocs, dans l'ordre :
+
+1. **Menu du haut** (fixe) : logo, liens d'ancre « Créateurs », « Marques », « Plans », « FAQ », bouton « Se connecter » (→ `/connexion`) et bouton « Créer un compte » (→ `/inscription?role=createur`). Il se compacte et prend un fond flouté au défilement. Sur mobile : menu plein écran animé.
+2. **Hero** : titre principal, sous-titre, deux appels à l'action « Je suis créateur » / « Je suis une marque » (→ inscription), lien « Déjà inscrit ? Se connecter ». Visuel : vignettes de vidéos verticales (9:16) avec leur compteur de vues.
+3. **Bloc Créateurs** : ce que le créateur obtient (statistiques Instagram + TikTok réunies, engagement, audience, gratuit), avec un aperçu de tableau de bord qui se construit au défilement. Bouton « Créer mon compte créateur ».
+4. **Bloc Marques** : ce que la marque obtient (classement par vues réelles, chiffres lus à la source, comparaison), avec un aperçu de la liste de créateurs. Bouton « Créer mon compte marque ».
+5. **Plans** : trois **cartes** Free / Basic / Premium. Chaque carte affiche le nom, une phrase de description, le prix (« Gratuit » pour Free ; « Gratuit pendant le lancement » pour Basic et Premium, car le paiement n'existe pas encore), la liste des fonctionnalités incluses (tirée de `PLAN_FEATURES`) et un bouton vers l'inscription marque. La carte Premium est mise en avant.
+6. **FAQ** : accordéon de 6 questions (d'où viennent les chiffres, réseaux pris en charge, compte Instagram professionnel requis, prix, confidentialité des données, déconnexion d'un réseau).
+7. **Footer** : logo, phrase de présentation, liens (Créateurs, Marques, Plans, FAQ, Se connecter, Créer un compte, Mentions légales), mention « © AVERO {année} ».
+
+### 3.2 Direction artistique
+
+Élégante, moderne, premium. Rythme de sections **sombres** (hero, bloc Marques, footer) et **claires** (bloc Créateurs, plans, FAQ).
+
+| Jeton | Valeur | Usage |
+|---|---|---|
+| Nuit | `#0F1030` | Fond des sections sombres (indigo très profond, pas un noir neutre) |
+| Papier | `#F5F6FA` | Fond des sections claires et des espaces connectés |
+| Encre | `#191934` | Texte sur fond clair |
+| Cobalt | `#3B46F1` | Actions, liens, accents |
+| Signal | `#FFD84D` | Réservé au badge « chiffre vérifié » et au plan actif |
+| Instagram / TikTok | `#D6336C` / `#0E9F9A` | Couleurs des réseaux dans les graphiques et badges |
+
+Typographie : **Archivo**. Version élargie (`font-stretch: 125%`) pour les titres et les grands chiffres (chiffres à chasse fixe), largeur normale pour le texte. Grandes tailles, interlignage serré pour les titres, beaucoup d'espace. Détails : filets de 1 px à faible opacité, léger grain sur les sections sombres, halo cobalt diffus derrière le visuel du hero.
+
+Animations (landing) :
+
+- **Hero** : titre révélé ligne par ligne (SplitText, masques), vignettes 9:16 qui montent en cascade puis réagissent légèrement à la souris (parallaxe), compteurs de vues qui défilent.
+- **Défilement fluide** (Lenis) synchronisé avec ScrollTrigger.
+- **Bloc Créateurs** : section épinglée pendant le défilement ; les KPI apparaissent un à un et la courbe d'abonnés se trace.
+- **Bloc Marques** : les lignes de la liste de créateurs se trient sous les yeux de l'utilisateur au défilement.
+- **Cartes de plans** : apparition en cascade ; halo lumineux qui suit la souris sur la carte survolée.
+- **FAQ** : ouverture/fermeture à hauteur animée.
+- **Menu** : se compacte au défilement ; menu mobile en plein écran avec liens en cascade.
+
+Règles : animer uniquement `transform` et `opacity` ; tout le contenu reste lisible sans JavaScript ; avec `prefers-reduced-motion: reduce`, aucune animation (le contenu s'affiche directement). Dans les espaces connectés : animations sobres seulement (apparition des KPI, compteurs).
+
+### 3.3 Protection des pages
 
 Protection : le fichier `proxy.ts` (remplaçant de `middleware.ts` dans Next.js 16) redirige les visiteurs non connectés vers `/connexion` ; chaque espace vérifie en plus le rôle côté serveur et redirige vers le bon espace. Une fonctionnalité réservée à un plan supérieur affiche un encart « Disponible en BASIC / PREMIUM » avec un lien vers `/marque/plans`.
 
