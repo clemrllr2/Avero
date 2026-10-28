@@ -164,7 +164,22 @@ Déclencheurs : callback OAuth, bouton « Actualiser » (ignoré si dernière sy
 
 ### 5.7 Variables d'environnement (`.env`, jamais dans le code ni dans git)
 
-`DATABASE_URL`, `DIRECT_URL` (Supabase), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `TOKEN_ENCRYPTION_KEY`, `INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`, `APP_URL`. Un fichier `.env.example` (sans valeurs) les liste.
+`DATABASE_URL`, `DIRECT_URL` (Supabase), `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `OAUTH2_MODE`, `TOKEN_ENCRYPTION_KEY`, `INSTAGRAM_CLIENT_ID`, `INSTAGRAM_CLIENT_SECRET`, `TIKTOK_CLIENT_KEY`, `TIKTOK_CLIENT_SECRET`, `APP_URL`. Un fichier `.env.example` (sans valeurs) les liste.
+
+### 5.8 Mode OAuth2 simulé (ajouté le 2026-10-28)
+
+Obtenir les accès développeur Meta et TikTok est long : un **mode simulé** reproduit le parcours OAuth2 sans compte développeur, pour les démonstrations et les tests.
+
+- **`OAUTH2_MODE`** : `simulated` (valeur par défaut si la variable est absente) ou `real`. Le mode ne choisit que le connecteur utilisé pour une **nouvelle** connexion. En mode `real`, si les clés du réseau manquent, « Connecter » ramène sur « Mes réseaux » avec un message d'erreur clair.
+- **Même parcours, même code** : le connecteur simulé implémente la même interface que les connecteurs Instagram et TikTok (`PlatformProvider`). Son adresse d'autorisation est une page d'AVERO, `/oauth/simulation/[platform]`. Le retour passe par la même route de callback (vérification du `state`, chiffrement des jetons, synchronisation, messages d'erreur).
+- **Écran d'autorisation simulé** : la structure d'un écran OAuth (« AVERO souhaite accéder à… », la liste des autorisations du réseau, les boutons Refuser et Autoriser), aux couleurs du réseau, marqué « Simulation ». Il ne reprend **ni les logos officiels ni de champ de mot de passe** (une copie de la page de connexion Instagram ou TikTok passerait pour de l'hameçonnage). Champs :
+  - **Nom d'utilisateur** (libre) : les chiffres sont générés à partir de ce nom, toujours identiques pour un même nom.
+  - **Taille du compte** : petit (quelques milliers d'abonnés), moyen (quelques dizaines de milliers), gros (plusieurs centaines de milliers).
+  - **Scénario de test** : « Tout fonctionne » ; « Compte personnel » (Instagram uniquement → message compte professionnel) ; « Compte déjà relié à un autre profil » ; « Accès révoqué à la prochaine actualisation » ; « Réseau indisponible à la prochaine actualisation ».
+  - « Refuser » renvoie le même retour qu'un refus réel (`error=access_denied`).
+- **Comptes simulés marqués** : `SocialConnection.simulated` (booléen). Une connexion simulée est toujours actualisée par le connecteur simulé, quel que soit `OAUTH2_MODE` : l'app ne contacte jamais le vrai Instagram ou TikTok avec un faux jeton. Badge « Simulé » dans « Mes réseaux ». Ces comptes apparaissent chez les marques comme les autres.
+- **Historique** : le connecteur simulé fournit aussi un historique d'abonnés sur 60 jours (champ facultatif `followerHistory`), pour que les graphiques et l'évolution sur 30 jours soient remplis dès la connexion.
+- **Délai entre deux actualisations manuelles** : 5 minutes en connexion réelle (quotas des API) ; 10 secondes pour une connexion simulée, pour pouvoir tester les scénarios « à la prochaine actualisation » sans attendre.
 
 ## 6. Gestion des erreurs
 
@@ -177,6 +192,7 @@ Déclencheurs : callback OAuth, bouton « Actualiser » (ignoré si dernière sy
 | Jeton expiré ou révoqué | `status = EXPIRED`, bandeau « Reconnecte ton compte … » ; les anciennes données restent affichées |
 | API indisponible pendant une synchro | Les données existantes sont conservées, message « Mise à jour impossible, réessaie plus tard » |
 | Audience indisponible (< 100 abonnés) | Encart « Audience disponible à partir de 100 abonnés » |
+| Mode `real` sans clés du réseau dans `.env` | Retour sur `/createur/reseaux`, message « La connexion à ce réseau n'est pas encore configurée » |
 | Marque accède à une page d'un plan supérieur | Encart d'incitation vers `/marque/plans`, aucune donnée chargée |
 
 ## 7. Tests
