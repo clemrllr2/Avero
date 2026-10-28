@@ -1,9 +1,12 @@
+import { getSessionCookie } from "better-auth/cookies";
 import { NextResponse, type NextRequest } from "next/server";
-import { SESSION_COOKIE } from "@/lib/session-cookie";
 
-/** Vérification rapide : sans cookie de session, direction la page de connexion. Le rôle est vérifié dans chaque page. */
+/**
+ * Vérification rapide : sans cookie de session, direction la page de connexion.
+ * La session elle-même et le rôle sont vérifiés dans chaque page (requireRole).
+ */
 export function proxy(request: NextRequest) {
-  if (!request.cookies.has(SESSION_COOKIE)) {
+  if (!getSessionCookie(request)) {
     return NextResponse.redirect(new URL("/connexion", request.url));
   }
   return NextResponse.next();

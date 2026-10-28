@@ -34,6 +34,7 @@ enum ConnectionStatus {
 model CreatorProfile {
   id          String             @id @default(cuid())
   userId      String             @unique
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   displayName String
   createdAt   DateTime           @default(now())
   connections SocialConnection[]
@@ -42,6 +43,7 @@ model CreatorProfile {
 model BrandProfile {
   id          String   @id @default(cuid())
   userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   companyName String
   plan        Plan     @default(FREE)
   createdAt   DateTime @default(now())
@@ -114,4 +116,73 @@ model Audience {
   genders      Json
   countries    Json
   updatedAt    DateTime         @updatedAt
+}
+
+// ─── Tables de Better Auth (générées par « auth generate », puis reliées aux profils) ───
+
+model User {
+  id             String          @id
+  name           String
+  email          String
+  emailVerified  Boolean         @default(false)
+  image          String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  /// Choisi à l'inscription ; la base refuse toute autre valeur que CREATOR ou BRAND.
+  role           Role
+  sessions       Session[]
+  accounts       Account[]
+  creatorProfile CreatorProfile?
+  brandProfile   BrandProfile?
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

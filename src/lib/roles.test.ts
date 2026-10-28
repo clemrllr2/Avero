@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { homePathFor, parseRoleSlug, roleFromSlug } from "@/lib/roles";
+import { homePathFor, parseRole, parseRoleSlug, roleFromSlug } from "@/lib/roles";
 
 test("chaque rôle a son espace", () => {
   expect(homePathFor("CREATOR")).toBe("/createur");
@@ -17,4 +17,14 @@ test("parseRoleSlug : « marque » ou, par défaut, « createur »", () => {
 test("roleFromSlug", () => {
   expect(roleFromSlug("marque")).toBe("BRAND");
   expect(roleFromSlug("createur")).toBe("CREATOR");
+});
+
+test("parseRole n'accepte que CREATOR et BRAND (rôle trafiqué à l'inscription → refus)", () => {
+  expect(parseRole("CREATOR")).toBe("CREATOR");
+  expect(parseRole("BRAND")).toBe("BRAND");
+  expect(parseRole("ADMIN")).toBeNull();
+  expect(parseRole("creator")).toBeNull();
+  expect(parseRole(undefined)).toBeNull();
+  expect(parseRole("")).toBeNull();
+  expect(parseRole(["BRAND"])).toBeNull();
 });

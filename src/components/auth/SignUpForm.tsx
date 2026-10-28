@@ -17,10 +17,18 @@ export function SignUpForm({ role }: { role: Role }) {
       <AuthField
         label={isCreator ? "Nom d'affichage" : "Nom de l'entreprise"}
         name="name"
+        defaultValue={state.values?.name}
         autoComplete={isCreator ? "nickname" : "organization"}
         required
       />
-      <AuthField label="E-mail" name="email" type="email" autoComplete="email" required />
+      <AuthField
+        label="E-mail"
+        name="email"
+        type="email"
+        defaultValue={state.values?.email}
+        autoComplete="email"
+        required
+      />
       <AuthField
         label="Mot de passe"
         name="password"

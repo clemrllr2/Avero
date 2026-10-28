@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { RoleTabs } from "@/components/auth/RoleTabs";
 import { SignInForm } from "@/components/auth/SignInForm";
-import { parseRoleSlug, roleFromSlug } from "@/lib/roles";
+import { parseRoleSlug } from "@/lib/roles";
 
 export default function SignInPage({ searchParams }: PageProps<"/connexion">) {
   return (
@@ -28,7 +28,7 @@ async function SignInContent({ searchParams }: Pick<PageProps<"/connexion">, "se
           ? "Retrouvez les statistiques des créateurs selon votre plan."
           : "Retrouve tes statistiques Instagram et TikTok."}
       </p>
-      <SignInForm key={slug} demoRole={roleFromSlug(slug)} />
+      <SignInForm />
       <p className="text-sm text-muted">
         {isBrand ? "Pas encore de compte marque ?" : "Pas encore de compte créateur ?"}{" "}
         <Link
