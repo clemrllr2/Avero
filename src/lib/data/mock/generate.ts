@@ -14,7 +14,7 @@ function seeded(seed: number) {
   };
 }
 
-interface NetworkSpec {
+export interface NetworkSpec {
   platform: Platform;
   followers: number;
   /** Taux de croissance des abonnés sur 60 jours (0.1 = +10 %). */
@@ -92,7 +92,8 @@ function buildAudience(followers: number, random: () => number): AudienceData {
   };
 }
 
-function buildNetwork(
+/** Un réseau fictif complet ; aussi utilisé par le connecteur simulé (src/lib/sync/simulated.ts). */
+export function buildNetwork(
   creatorId: string,
   username: string,
   spec: NetworkSpec,

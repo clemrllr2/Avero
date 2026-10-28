@@ -22,6 +22,7 @@ function profile(overrides: Partial<CreatorProfileRow["connections"][number]> = 
         tokenExpiresAt: null,
         status: "ACTIVE",
         lastSyncedAt: d("2026-10-27T10:00:00Z"),
+        simulated: false,
         createdAt: d("2026-09-01T00:00:00Z"),
         snapshots: [
           { id: "s2", connectionId: "conn_1", date: d("2026-10-20T00:00:00Z"), followers: 1200 },
@@ -102,6 +103,11 @@ describe("toCreatorSource", () => {
   test("jamais synchronisé → date de connexion à la place de la dernière mise à jour", () => {
     const network = toCreatorSource(profile({ lastSyncedAt: null })).networks[0];
     expect(network.lastSyncedAt).toEqual(d("2026-09-01T00:00:00Z"));
+  });
+
+  test("un compte relié en mode simulé est signalé comme tel", () => {
+    expect(toCreatorSource(profile()).networks[0].simulated).toBe(false);
+    expect(toCreatorSource(profile({ simulated: true })).networks[0].simulated).toBe(true);
   });
 
   test("sans audience enregistrée → null", () => {

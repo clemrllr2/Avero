@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "postinstall": "prisma generate",
-    "db:migrate": "prisma migrate dev && prisma generate",
+    "db:migrate": "sh -c 'prisma migrate dev \"$@\" && prisma generate' --",
     "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {

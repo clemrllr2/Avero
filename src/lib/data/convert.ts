@@ -29,6 +29,7 @@ function toNetwork(connection: ConnectionRow): NetworkData {
     username: connection.username,
     avatarUrl: connection.avatarUrl,
     status: connection.status,
+    simulated: connection.simulated,
     // Pas encore synchronisé : on affiche la date de connexion du compte.
     lastSyncedAt: connection.lastSyncedAt ?? connection.createdAt,
     snapshots: [...connection.snapshots]

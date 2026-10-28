@@ -48,6 +48,8 @@ async function main() {
           accessToken: "seed-jeton-factice",
           status: network.status,
           lastSyncedAt: network.lastSyncedAt,
+          // Comptes fictifs : jamais synchronisés avec le vrai Instagram ou TikTok.
+          simulated: true,
         };
         const connection = await tx.socialConnection.upsert({
           where: { platform_externalUserId: { platform: network.platform, externalUserId: `seed-${n}` } },

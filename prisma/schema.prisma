@@ -51,9 +51,9 @@ model BrandProfile {
 
 /// Un compte Instagram ou TikTok relié à un créateur. Les jetons sont chiffrés avant d'être enregistrés.
 model SocialConnection {
-  id             String           @id @default(cuid())
+  id             String            @id @default(cuid())
   creatorId      String
-  creator        CreatorProfile   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator        CreatorProfile    @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   platform       Platform
   externalUserId String
   username       String
@@ -61,10 +61,12 @@ model SocialConnection {
   accessToken    String
   refreshToken   String?
   tokenExpiresAt DateTime?
-  status         ConnectionStatus @default(ACTIVE)
+  status         ConnectionStatus  @default(ACTIVE)
   /// null tant que la première synchronisation n'a pas eu lieu
   lastSyncedAt   DateTime?
-  createdAt      DateTime         @default(now())
+  /// Compte relié en mode simulé (OAUTH2_MODE=simulated) : toujours actualisé par le connecteur simulé
+  simulated      Boolean           @default(false)
+  createdAt      DateTime          @default(now())
   snapshots      AccountSnapshot[]
   posts          Post[]
   audience       Audience?

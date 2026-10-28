@@ -18,6 +18,11 @@ export function NetworkCard({ platform, network }: { platform: Platform; network
         <div className="flex items-center gap-3">
           <span aria-hidden className={`size-3 rounded-full ${DOT[platform]}`} />
           <h2 className="display text-xl font-bold">{name}</h2>
+          {network?.simulated && (
+            <span title="Compte relié en mode simulé" className="rounded-full bg-signal px-2 py-0.5 text-xs font-semibold text-ink">
+              Simulé
+            </span>
+          )}
         </div>
         <span
           className={`rounded-full px-2.5 py-1 text-xs font-semibold ${

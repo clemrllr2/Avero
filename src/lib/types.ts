@@ -41,6 +41,8 @@ export interface NetworkData {
   username: string;
   avatarUrl: string | null;
   status: ConnectionStatus;
+  /** Compte relié en mode simulé (sans vraie connexion au réseau) */
+  simulated?: boolean;
   lastSyncedAt: Date;
   /** Triés par date croissante */
   snapshots: FollowerSnapshot[];
