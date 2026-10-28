@@ -37,7 +37,7 @@ export default function NetworksPage({ searchParams }: PageProps<"/createur/rese
 
 async function Networks() {
   const user = await requireRole("CREATOR");
-  const dashboard = await getCreatorDashboard(user.id);
+  const dashboard = await getCreatorDashboard(user.profileId);
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {PLATFORMS.map((platform) => (

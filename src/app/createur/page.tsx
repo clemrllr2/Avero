@@ -18,7 +18,7 @@ export default function CreatorDashboardPage() {
 
 async function Dashboard() {
   const user = await requireRole("CREATOR");
-  const dashboard = await getCreatorDashboard(user.id);
+  const dashboard = await getCreatorDashboard(user.profileId);
   const firstName = user.name.split(" ")[0];
 
   if (!dashboard || dashboard.networks.length === 0) {

@@ -10,6 +10,8 @@ import type { Plan, Role } from "@/lib/types";
 export interface CurrentUser {
   /** Identifiant du compte Better Auth */
   id: string;
+  /** Identifiant du profil créateur ou marque (celui utilisé par les données) */
+  profileId: string;
   role: Role;
   name: string;
   /** null pour un créateur */
@@ -28,11 +30,11 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const role = parseRole(session.user.role);
   if (role === "CREATOR") {
     const profile = await prisma.creatorProfile.findUnique({ where: { userId: id } });
-    return profile && { id, role, name: profile.displayName, plan: null };
+    return profile && { id, profileId: profile.id, role, name: profile.displayName, plan: null };
   }
   if (role === "BRAND") {
     const profile = await prisma.brandProfile.findUnique({ where: { userId: id } });
-    return profile && { id, role, name: profile.companyName, plan: profile.plan };
+    return profile && { id, profileId: profile.id, role, name: profile.companyName, plan: profile.plan };
   }
   return null;
 });
