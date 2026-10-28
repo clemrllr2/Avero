@@ -26,25 +26,18 @@ export function CreatorsSection() {
     () => {
       const mm = gsap.matchMedia();
 
-      // Ordinateur : le contenu apparaît dès que la section entre à l'écran (jamais d'écran vide),
-      // puis la section est brièvement épinglée pendant que la courbe d'abonnés se trace.
+      // Ordinateur : la section est épinglée et le tableau de bord se construit au défilement,
+      // sur une courte distance (500 px) pour ne jamais laisser l'écran vide longtemps.
       mm.add(`${MOTION_OK} and (min-width: 1024px)`, () => {
         const path = ref.current?.querySelector<SVGPathElement>("[data-curve]");
         const length = path?.getTotalLength() ?? 0;
-        gsap
-          .timeline({ scrollTrigger: { trigger: ref.current, start: "top 80%", once: true } })
-          .fromTo("[data-copy]", { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.7, ease: "power3.out" })
-          .fromTo("[data-preview]", { autoAlpha: 0, y: 48, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" }, "<0.1")
-          .fromTo("[data-kpi]", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.5, ease: "power3.out" }, "<0.3");
-        gsap.fromTo(
-          path ?? [],
-          { strokeDasharray: length, strokeDashoffset: length },
-          {
-            strokeDashoffset: 0,
-            ease: "none",
-            scrollTrigger: { trigger: ref.current, start: "top top", end: "+=500", pin: true, scrub: 0.6 },
-          },
-        );
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: ref.current, start: "top top", end: "+=500", pin: true, scrub: 0.4 },
+        });
+        tl.fromTo("[data-copy]", { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.3 })
+          .fromTo("[data-preview]", { autoAlpha: 0, y: 48, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.4 }, "<")
+          .fromTo("[data-kpi]", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, stagger: 0.12, duration: 0.3 }, "<0.15")
+          .fromTo(path ?? [], { strokeDasharray: length, strokeDashoffset: length }, { strokeDashoffset: 0, duration: 0.8, ease: "none" }, "<0.1");
       });
 
       // Mobile et tablette : simple apparition au défilement, sans épinglage.
