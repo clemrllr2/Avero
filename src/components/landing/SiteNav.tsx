@@ -5,6 +5,8 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { MOTION_OK, gsap, useGSAP } from "@/components/motion/gsap";
 import { useScrollTo } from "@/components/motion/SmoothScroll";
 import { buttonClass } from "@/components/ui/Button";
+import { Aurora } from "@/components/visual/Aurora";
+import { Wordmark } from "@/components/visual/Wordmark";
 import { NAV_LINKS } from "@/lib/landing-content";
 
 const NAV_OFFSET = -72;
@@ -91,9 +93,7 @@ export function SiteNav({ anchorsBase = "" }: { anchorsBase?: "" | "/" }) {
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 text-paper sm:px-8">
-        <Link href="/" className="display text-xl font-extrabold tracking-tight">
-          AVERO
-        </Link>
+        <Wordmark />
 
         <nav aria-label="Navigation principale" className="hidden items-center gap-8 text-[15px] md:flex">
           {NAV_LINKS.map((link) => (
@@ -112,7 +112,7 @@ export function SiteNav({ anchorsBase = "" }: { anchorsBase?: "" | "/" }) {
           <Link href="/connexion" className={buttonClass("ghost", "px-4 py-2.5 text-paper hover:bg-paper/10")}>
             Se connecter
           </Link>
-          <Link href="/inscription?role=createur" className={buttonClass("primary", "px-4 py-2.5")}>
+          <Link href="/inscription?role=createur" className={buttonClass("primary", "px-4 py-2.5 shadow-[0_8px_30px_-6px_rgba(59,70,241,0.8)]")}>
             Créer un compte
           </Link>
         </div>
@@ -139,8 +139,9 @@ export function SiteNav({ anchorsBase = "" }: { anchorsBase?: "" | "/" }) {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="section-dark grain fixed inset-0 z-40 pt-28 flex flex-col gap-8 px-6 pb-12 md:hidden"
+          className="section-dark grain fixed inset-0 z-40 isolate flex flex-col gap-8 overflow-hidden px-6 pt-28 pb-12 md:hidden"
         >
+          <Aurora />
           <nav aria-label="Menu mobile" className="flex flex-col gap-5">
             {NAV_LINKS.map((link) => (
               <a

@@ -1,5 +1,7 @@
 import { cacheLife } from "next/cache";
 import Link from "next/link";
+import { Aurora } from "@/components/visual/Aurora";
+import { Wordmark } from "@/components/visual/Wordmark";
 
 const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
@@ -34,13 +36,12 @@ async function CurrentYear() {
 
 export function SiteFooter() {
   return (
-    <footer className="section-dark grain">
+    <footer className="section-dark grain relative isolate overflow-hidden">
+      <Aurora className="opacity-60" />
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-4 pt-20 pb-10 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
           <div className="flex flex-col gap-4">
-            <Link href="/" className="display text-3xl font-extrabold tracking-tight">
-              AVERO
-            </Link>
+            <Wordmark className="text-3xl" />
             <p className="max-w-[36ch] text-paper/60">
               Les statistiques des créateurs, lues directement sur Instagram et TikTok.
             </p>
@@ -62,6 +63,12 @@ export function SiteFooter() {
           © AVERO <CurrentYear />
         </p>
       </div>
+      <p
+        aria-hidden
+        className="display text-gradient pointer-events-none -mb-[0.2em] text-center text-[clamp(3.5rem,17vw,16rem)] leading-[0.85] font-extrabold opacity-80 select-none"
+      >
+        AVERO
+      </p>
     </footer>
   );
 }

@@ -1,6 +1,6 @@
 const BLOBS = {
   dark: [
-    "-top-[30%] -left-[10%] w-[60%] bg-cobalt/60",
+    "-top-[30%] -left-[10%] w-[60%] bg-cobalt/45",
     "top-[5%] -right-[15%] w-[50%] bg-violet/45",
     "-bottom-[35%] left-[25%] w-[55%] bg-instagram/30",
     "-bottom-[20%] right-[5%] w-[35%] bg-tiktok/30",

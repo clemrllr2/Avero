@@ -4,6 +4,9 @@ import { useRef } from "react";
 import { MOTION_OK, gsap, useGSAP } from "@/components/motion/gsap";
 import { ButtonLink } from "@/components/ui/Button";
 import { PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
+import { Aurora } from "@/components/visual/Aurora";
+import { Avatar } from "@/components/visual/Avatar";
+import { Icon } from "@/components/visual/Icon";
 import { formatCompact } from "@/lib/format";
 import { BRAND_PREVIEW_ROWS } from "@/lib/landing-content";
 
@@ -13,6 +16,10 @@ const ROW_HEIGHT = 68;
 // l'animation part de l'ordre d'arrivée et la remet dans l'ordre.
 const SORTED = [...BRAND_PREVIEW_ROWS].sort((a, b) => b.views - a.views);
 const ARRIVAL_INDEX = SORTED.map((row) => BRAND_PREVIEW_ROWS.indexOf(row));
+const MAX_VIEWS = SORTED[0].views;
+
+/** Médailles des trois premiers (or, argent, bronze). */
+const MEDALS = ["bg-signal text-ink", "bg-[#d9dcec] text-ink", "bg-[#e2a072] text-ink"];
 
 const POINTS = [
   "Des chiffres lus à la source, impossibles à retoucher",
@@ -43,7 +50,8 @@ export function BrandsSection() {
           { autoAlpha: 1, y: (i: number) => (ARRIVAL_INDEX[i] - i) * ROW_HEIGHT, stagger: 0.08, duration: 0.4 },
         )
           .to(rows, { y: 0, duration: 1, ease: "power2.inOut" })
-          .fromTo("[data-rank]", { autoAlpha: 0 }, { autoAlpha: 1, stagger: 0.05, duration: 0.3 })
+          .fromTo("[data-rank]", { autoAlpha: 0, scale: 0.5 }, { autoAlpha: 1, scale: 1, stagger: 0.05, duration: 0.3 })
+          .fromTo("[data-bar]", { scaleX: 0 }, { scaleX: 1, stagger: 0.05, duration: 0.5, ease: "power2.out" }, "<")
           .fromTo("[data-badge]", { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.3, ease: "back.out(2)" });
       });
       return () => mm.revert();
@@ -52,8 +60,9 @@ export function BrandsSection() {
   );
 
   return (
-    <section id="marques" ref={ref} className="section-dark grain overflow-hidden">
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 py-28 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:py-36">
+    <section id="marques" ref={ref} className="section-dark grain relative isolate overflow-hidden">
+      <Aurora />
+      <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 py-28 sm:px-8 lg:grid-cols-[1fr_1.1fr] lg:py-36">
         <div className="flex flex-col gap-7">
           <p data-motion data-copy className="text-[15px] font-semibold text-signal">
             Pour les marques
@@ -64,7 +73,9 @@ export function BrandsSection() {
           <ul data-motion data-copy className="flex flex-col gap-3 text-lg text-paper/70">
             {POINTS.map((point) => (
               <li key={point} className="flex gap-3">
-                <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-signal" />
+                <span aria-hidden className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-paper/10 text-signal">
+                  <Icon name="check" className="size-3.5" />
+                </span>
                 {point}
               </li>
             ))}
@@ -79,7 +90,7 @@ export function BrandsSection() {
         <div
           data-motion
           data-list
-          className="rounded-[28px] border border-paper/10 bg-night-soft p-5 sm:p-7"
+          className="rounded-[32px] border border-paper/12 bg-night-soft/90 p-4 shadow-[0_40px_100px_-40px_rgba(59,70,241,0.6)] backdrop-blur sm:p-7"
           aria-label="Aperçu du classement des créateurs par vues"
         >
           <div className="mb-3 flex justify-between px-3 text-sm text-paper/50">
@@ -94,24 +105,39 @@ export function BrandsSection() {
                 data-row
                 // Fond opaque + premier plan pour les mieux classés : les lignes se croisent proprement pendant le tri.
                 style={{ height: ROW_HEIGHT, zIndex: SORTED.length - rank }}
-                className="relative flex items-center justify-between gap-4 rounded-xl border-t border-paper/10 bg-night-soft px-3"
+                className="relative flex items-center justify-between gap-3 rounded-xl border-t border-paper/10 bg-night-soft px-2 sm:px-3"
               >
-                <span className="flex items-center gap-4">
-                  <span data-motion data-rank className="display w-5 text-sm text-paper/40">
+                <span className="flex min-w-0 items-center gap-3">
+                  <span
+                    data-motion
+                    data-rank
+                    className={`display grid size-6 shrink-0 place-items-center rounded-full text-xs font-bold ${MEDALS[rank] ?? "text-paper/40"}`}
+                  >
                     {rank + 1}
                   </span>
-                  <span className="flex flex-col">
-                    <span className="font-semibold">{row.name}</span>
-                    <span className="text-xs text-paper/50">{PLATFORM_NAMES[row.platform]}</span>
+                  <Avatar name={row.name} size="md" />
+                  <span className="flex min-w-0 flex-col">
+                    <span className="truncate font-semibold">{row.name}</span>
+                    <span className="flex items-center gap-1 text-xs text-paper/50">
+                      <Icon name={row.platform === "INSTAGRAM" ? "instagram" : "tiktok"} className="size-3" />
+                      {PLATFORM_NAMES[row.platform]}
+                    </span>
                   </span>
                 </span>
-                <span className="flex items-center gap-3">
+                <span className="flex shrink-0 items-center gap-3">
                   {rank === 0 && (
-                    <span data-motion data-badge className="rounded-md bg-signal px-1.5 py-0.5 text-[11px] font-semibold text-ink">
+                    <span data-motion data-badge className="hidden rounded-md bg-signal px-1.5 py-0.5 text-[11px] font-semibold text-ink md:inline">
                       Lu sur {PLATFORM_NAMES[row.platform]}
                     </span>
                   )}
-                  <span className="display text-xl font-bold">{formatCompact(row.views)}</span>
+                  <span aria-hidden className="hidden h-1.5 w-20 overflow-hidden rounded-full bg-paper/10 sm:block">
+                    <span
+                      data-bar
+                      className="block h-full origin-left rounded-full bg-gradient-to-r from-cobalt via-violet to-instagram"
+                      style={{ width: `${Math.round((row.views / MAX_VIEWS) * 100)}%` }}
+                    />
+                  </span>
+                  <span className="display w-16 text-right text-lg font-bold sm:text-xl">{formatCompact(row.views)}</span>
                 </span>
               </li>
             ))}

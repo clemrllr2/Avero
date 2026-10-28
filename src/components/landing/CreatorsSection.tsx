@@ -4,6 +4,10 @@ import { useRef } from "react";
 import { MOTION_OK, gsap, useGSAP } from "@/components/motion/gsap";
 import { ButtonLink } from "@/components/ui/Button";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
+import { Avatar } from "@/components/visual/Avatar";
+import { Icon } from "@/components/visual/Icon";
+import { RadialGauge } from "@/components/visual/RadialGauge";
+import { Sparkline } from "@/components/visual/Sparkline";
 import { CREATOR_PREVIEW_KPIS } from "@/lib/landing-content";
 
 // Courbe d'abonnés de l'aperçu (viewBox 0 0 400 140).
@@ -49,7 +53,7 @@ export function CreatorsSection() {
   );
 
   return (
-    <section id="createurs" ref={ref} className="bg-paper">
+    <section id="createurs" ref={ref} className="dot-grid-ink relative isolate overflow-hidden bg-paper">
       <div className="mx-auto grid min-h-[100svh] max-w-7xl items-center gap-14 px-4 py-24 sm:px-8 lg:grid-cols-2">
         <div className="flex flex-col gap-7">
           <p data-motion data-copy className="text-[15px] font-semibold text-cobalt">
@@ -61,7 +65,9 @@ export function CreatorsSection() {
           <ul data-motion data-copy className="flex flex-col gap-3 text-lg text-muted">
             {POINTS.map((point) => (
               <li key={point} className="flex gap-3">
-                <span aria-hidden className="mt-2.5 size-1.5 shrink-0 rounded-full bg-cobalt" />
+                <span aria-hidden className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-cobalt/10 text-cobalt">
+                  <Icon name="check" className="size-3.5" />
+                </span>
                 {point}
               </li>
             ))}
@@ -73,33 +79,71 @@ export function CreatorsSection() {
           </div>
         </div>
 
-        <div
-          data-motion
-          data-preview
-          className="rounded-[28px] border border-line bg-surface p-6 shadow-[0_40px_80px_-40px_rgba(25,25,52,0.35)] sm:p-8"
-          aria-label="Aperçu du tableau de bord créateur"
-        >
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-            <span className="display text-xl font-bold">Léa Martin</span>
-            <span className="flex gap-2">
-              <PlatformBadge platform="INSTAGRAM" />
-              <PlatformBadge platform="TIKTOK" />
-            </span>
-          </div>
-          <dl className="grid grid-cols-2 gap-x-6 gap-y-6">
-            {CREATOR_PREVIEW_KPIS.map((kpi) => (
-              <div key={kpi.label} data-motion data-kpi className="flex flex-col-reverse gap-1 border-l-2 border-cobalt/25 pl-4">
-                <dt className="text-sm text-muted">{kpi.label}</dt>
-                <dd className="display text-[26px] font-bold sm:text-[30px]">{kpi.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className="mt-8">
-            <p className="mb-3 text-sm text-muted">Abonnés sur 60 jours</p>
-            <svg viewBox="0 0 400 140" className="h-auto w-full" role="img" aria-label="Courbe d'abonnés en hausse">
-              <path d={`${CURVE} L 400 140 L 0 140 Z`} className="fill-cobalt/8" />
-              <path data-curve d={CURVE} className="fill-none stroke-cobalt" strokeWidth={3} strokeLinecap="round" />
-            </svg>
+        <div data-motion data-preview className="relative isolate">
+          <div aria-hidden className="absolute -inset-8 -z-10 rounded-[48px] bg-gradient-to-br from-cobalt/25 via-violet/20 to-instagram/20 blur-3xl" />
+          <div
+            className="rounded-[32px] border border-white bg-surface/90 p-5 shadow-[0_40px_80px_-40px_rgba(25,25,52,0.45)] backdrop-blur sm:p-7"
+            aria-label="Aperçu du tableau de bord créateur"
+          >
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <span className="flex items-center gap-3">
+                <Avatar name="Léa Martin" size="md" />
+                <span className="flex flex-col leading-tight">
+                  <span className="display text-lg font-bold">Léa Martin</span>
+                  <span className="text-xs text-muted">Mis à jour il y a 2 min</span>
+                </span>
+              </span>
+              <span className="flex gap-2">
+                <PlatformBadge platform="INSTAGRAM" />
+                <PlatformBadge platform="TIKTOK" />
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {CREATOR_PREVIEW_KPIS.map((kpi) => (
+                <div
+                  key={kpi.label}
+                  data-motion
+                  data-kpi
+                  className="flex flex-col-reverse gap-2 overflow-hidden rounded-2xl p-4"
+                  style={{ backgroundColor: `${kpi.color}0f` }}
+                >
+                  {kpi.spark ? (
+                    <Sparkline values={kpi.spark} color={kpi.color} className="-mx-4 -mb-4 h-10 w-[calc(100%+2rem)]" />
+                  ) : (
+                    <RadialGauge value={kpi.gauge ?? 0} size={44} color={kpi.color} track={`${kpi.color}22`} />
+                  )}
+                  <span className="text-sm text-muted">{kpi.label}</span>
+                  <span className="display text-[24px] leading-none font-bold sm:text-[28px]">{kpi.value}</span>
+                  <span aria-hidden className="grid size-8 place-items-center rounded-xl text-white" style={{ backgroundColor: kpi.color }}>
+                    <Icon name={kpi.icon} className="size-4" />
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 rounded-2xl bg-paper p-4">
+              <p className="mb-3 flex items-center justify-between text-sm text-muted">
+                Abonnés sur 60 jours
+                <span className="flex items-center gap-1 font-semibold text-tiktok">
+                  <Icon name="arrow-up" className="size-3.5" />
+                  +7,6 %
+                </span>
+              </p>
+              <svg viewBox="0 0 400 140" preserveAspectRatio="none" className="h-24 w-full sm:h-28" role="img" aria-label="Courbe d'abonnés en hausse">
+                <defs>
+                  <linearGradient id="preview-area" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#7c5cff" stopOpacity="0.35" />
+                    <stop offset="100%" stopColor="#7c5cff" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="preview-line" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#3b46f1" />
+                    <stop offset="60%" stopColor="#7c5cff" />
+                    <stop offset="100%" stopColor="#d6336c" />
+                  </linearGradient>
+                </defs>
+                <path d={`${CURVE} L 400 140 L 0 140 Z`} fill="url(#preview-area)" />
+                <path data-curve d={CURVE} fill="none" stroke="url(#preview-line)" strokeWidth={3.5} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
