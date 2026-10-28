@@ -26,17 +26,25 @@ export function CreatorsSection() {
     () => {
       const mm = gsap.matchMedia();
 
-      // Ordinateur : la section est épinglée et le tableau de bord se construit au défilement.
+      // Ordinateur : le contenu apparaît dès que la section entre à l'écran (jamais d'écran vide),
+      // puis la section est brièvement épinglée pendant que la courbe d'abonnés se trace.
       mm.add(`${MOTION_OK} and (min-width: 1024px)`, () => {
         const path = ref.current?.querySelector<SVGPathElement>("[data-curve]");
         const length = path?.getTotalLength() ?? 0;
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: ref.current, start: "top top", end: "+=1200", pin: true, scrub: 0.8 },
-        });
-        tl.fromTo("[data-copy]", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, stagger: 0.15, duration: 0.6 })
-          .fromTo("[data-preview]", { autoAlpha: 0, y: 60, scale: 0.96 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.8 }, "<0.2")
-          .fromTo("[data-kpi]", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, stagger: 0.35, duration: 0.5 })
-          .fromTo(path ?? [], { strokeDasharray: length, strokeDashoffset: length }, { strokeDashoffset: 0, duration: 1.4, ease: "none" }, "<0.2");
+        gsap
+          .timeline({ scrollTrigger: { trigger: ref.current, start: "top 80%", once: true } })
+          .fromTo("[data-copy]", { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.7, ease: "power3.out" })
+          .fromTo("[data-preview]", { autoAlpha: 0, y: 48, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" }, "<0.1")
+          .fromTo("[data-kpi]", { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.5, ease: "power3.out" }, "<0.3");
+        gsap.fromTo(
+          path ?? [],
+          { strokeDasharray: length, strokeDashoffset: length },
+          {
+            strokeDashoffset: 0,
+            ease: "none",
+            scrollTrigger: { trigger: ref.current, start: "top top", end: "+=500", pin: true, scrub: 0.6 },
+          },
+        );
       });
 
       // Mobile et tablette : simple apparition au défilement, sans épinglage.
