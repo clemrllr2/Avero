@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { SimulatedConsent } from "@/components/oauth/SimulatedConsent";
+import { Aurora } from "@/components/visual/Aurora";
 import { requireRole } from "@/lib/session";
 import { platformFromSlug } from "@/lib/sync/platforms";
 import { parseConsentForm } from "@/lib/sync/simulated";
@@ -11,7 +12,8 @@ export const metadata: Metadata = { title: "Autorisation simulée · AVERO" };
 /** Écran d'autorisation du mode simulé (OAUTH2_MODE=simulated), à la place de celui d'Instagram ou TikTok. */
 export default function SimulatedConsentPage({ params, searchParams }: PageProps<"/oauth/simulation/[platform]">) {
   return (
-    <main className="flex min-h-dvh items-start justify-center bg-paper px-4 py-10 sm:items-center">
+    <main className="dot-grid-ink relative isolate flex min-h-dvh items-start justify-center overflow-hidden bg-paper px-4 py-10 sm:items-center">
+      <Aurora tone="light" />
       {/* Session, réseau et ?state= : lus dans un Suspense (règle Next 16). */}
       <Suspense fallback={<p className="text-muted">Chargement…</p>}>
         <Consent params={params} searchParams={searchParams} />

@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteNav } from "@/components/landing/SiteNav";
+import { Aurora } from "@/components/visual/Aurora";
+import { Icon, type IconName } from "@/components/visual/Icon";
 
 export const metadata: Metadata = {
   title: "Mentions légales — AVERO",
@@ -15,10 +17,15 @@ function ToFill({ children = "À compléter" }: { children?: string }) {
   return <mark className="rounded bg-signal/60 px-1 text-ink">[{children}]</mark>;
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+function Section({ title, icon, children }: { title: string; icon: IconName; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-3 border-t border-line pt-8">
-      <h2 className="display text-xl font-bold">{title}</h2>
+    <section className="flex flex-col gap-4 rounded-3xl border border-line bg-surface p-6 sm:p-8">
+      <h2 className="display flex items-center gap-3 text-xl font-bold">
+        <span aria-hidden className="grid size-10 shrink-0 place-items-center rounded-2xl bg-cobalt/8 text-cobalt">
+          <Icon name={icon} className="size-5" />
+        </span>
+        {title}
+      </h2>
       <div className="flex flex-col gap-3 text-[15px] leading-relaxed text-muted [&_strong]:font-semibold [&_strong]:text-ink">
         {children}
       </div>
@@ -30,15 +37,16 @@ export default function LegalNoticePage() {
   return (
     <>
       <SiteNav anchorsBase="/" />
-      <header className="section-dark grain">
+      <header className="section-dark grain relative isolate overflow-hidden">
+        <Aurora />
         <div className="mx-auto flex max-w-3xl flex-col gap-3 px-4 pt-36 pb-16 sm:px-8">
           <h1 className="display text-[40px] leading-tight font-extrabold sm:text-[52px]">Mentions légales</h1>
           <p className="text-paper/60">Dernière mise à jour : {UPDATED_ON}</p>
         </div>
       </header>
 
-      <main className="mx-auto flex w-full max-w-3xl flex-col gap-10 px-4 py-16 sm:px-8">
-        <Section title="Éditeur du site">
+      <main className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-16 sm:px-8">
+        <Section title="Éditeur du site" icon="building">
           <p>
             Le site AVERO est édité par <strong><ToFill>raison sociale</ToFill></strong>,{" "}
             <ToFill>forme juridique</ToFill> au capital de <ToFill>montant</ToFill>, dont le siège
@@ -49,19 +57,19 @@ export default function LegalNoticePage() {
           </p>
         </Section>
 
-        <Section title="Directeur de la publication">
+        <Section title="Directeur de la publication" icon="user">
           <p>
             <ToFill>nom et fonction</ToFill>
           </p>
         </Section>
 
-        <Section title="Hébergement">
+        <Section title="Hébergement" icon="globe">
           <p>
             <ToFill>À compléter au déploiement : nom, adresse et téléphone de l&apos;hébergeur</ToFill>
           </p>
         </Section>
 
-        <Section title="Données personnelles">
+        <Section title="Données personnelles" icon="shield">
           <p>
             <strong>Données collectées.</strong> Nom d&apos;affichage ou nom de l&apos;entreprise, adresse
             e-mail, et pour les créateurs, les statistiques des comptes Instagram et TikTok qu&apos;ils
@@ -82,7 +90,7 @@ export default function LegalNoticePage() {
           </p>
         </Section>
 
-        <Section title="Cookies">
+        <Section title="Cookies" icon="lock">
           <p>
             AVERO utilise un seul cookie : le cookie de session, strictement nécessaire pour rester
             connecté. Il ne sert ni à la mesure d&apos;audience ni à la publicité, il ne demande donc
@@ -90,7 +98,7 @@ export default function LegalNoticePage() {
           </p>
         </Section>
 
-        <Section title="Propriété intellectuelle">
+        <Section title="Propriété intellectuelle" icon="sparkle">
           <p>
             Les textes, le logo et l&apos;interface d&apos;AVERO sont protégés. Toute reproduction
             sans autorisation est interdite. Les noms Instagram et TikTok appartiennent à leurs
@@ -98,7 +106,7 @@ export default function LegalNoticePage() {
           </p>
         </Section>
 
-        <p className="border-t border-line pt-8 text-sm text-muted">
+        <p className="pt-4 text-sm text-muted">
           <Link href="/" className="font-semibold text-cobalt underline-offset-4 hover:underline">
             Retour à l&apos;accueil
           </Link>

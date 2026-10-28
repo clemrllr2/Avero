@@ -1,5 +1,6 @@
 import { FormError } from "@/components/auth/AuthField";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/visual/Icon";
 import { PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
 import { slugFor } from "@/lib/sync/platforms";
 import type { SimulatedScenario, SimulatedSize } from "@/lib/sync/simulated";
@@ -32,9 +33,17 @@ const SCENARIOS: { value: SimulatedScenario; label: string; instagramOnly?: bool
   { value: "unavailable_later", label: "Réseau indisponible à la prochaine actualisation" },
 ];
 
-const ACCENT: Record<Platform, { bar: string; dot: string; ring: string }> = {
-  INSTAGRAM: { bar: "bg-instagram", dot: "bg-instagram", ring: "has-checked:border-instagram has-checked:bg-instagram/5" },
-  TIKTOK: { bar: "bg-tiktok", dot: "bg-tiktok", ring: "has-checked:border-tiktok has-checked:bg-tiktok/5" },
+const ACCENT: Record<Platform, { banner: string; dot: string; ring: string }> = {
+  INSTAGRAM: {
+    banner: "bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af]",
+    dot: "bg-instagram",
+    ring: "has-checked:border-instagram has-checked:bg-instagram/5",
+  },
+  TIKTOK: {
+    banner: "bg-[#0b0b16] bg-[radial-gradient(circle_at_20%_30%,rgba(37,244,238,0.45),transparent_45%),radial-gradient(circle_at_85%_70%,rgba(254,44,85,0.45),transparent_45%)]",
+    dot: "bg-tiktok",
+    ring: "has-checked:border-tiktok has-checked:bg-tiktok/5",
+  },
 };
 
 function CheckIcon() {
@@ -64,8 +73,20 @@ export function SimulatedConsent({
   const accent = ACCENT[platform];
 
   return (
-    <section className="w-full max-w-[460px] overflow-hidden rounded-3xl border border-line bg-surface">
-      <div aria-hidden className={`h-1.5 ${accent.bar}`} />
+    <section className="w-full max-w-[460px] overflow-hidden rounded-[32px] border border-white bg-surface shadow-[0_40px_90px_-40px_rgba(25,25,52,0.45)]">
+      <div aria-hidden className={`flex h-28 items-center justify-center gap-4 ${accent.banner}`}>
+        <span className="display grid size-14 place-items-center rounded-2xl bg-night text-lg font-extrabold text-white shadow-lg ring-4 ring-white/20">
+          A
+        </span>
+        <span className="flex items-center gap-1 text-white/80">
+          <span className="size-1.5 rounded-full bg-white/60" />
+          <Icon name="link" className="size-5" />
+          <span className="size-1.5 rounded-full bg-white/60" />
+        </span>
+        <span className="grid size-14 place-items-center rounded-2xl bg-white/15 text-white shadow-lg ring-4 ring-white/20 backdrop-blur">
+          <Icon name={platform === "INSTAGRAM" ? "instagram" : "tiktok"} className="size-7" />
+        </span>
+      </div>
       <div className="flex flex-col gap-6 p-6 sm:p-8">
         <div className="flex items-center justify-between gap-3">
           <p className="flex items-center gap-2.5 text-sm font-semibold">
