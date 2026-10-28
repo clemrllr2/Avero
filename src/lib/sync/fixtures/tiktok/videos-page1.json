@@ -1,0 +1,4 @@
+{ "data": { "videos": [
+  { "id": "v1", "title": "Chorégraphie du jour", "cover_image_url": "https://cdn.exemple.test/v1.jpg", "share_url": "https://www.tiktok.com/@ines.danse/video/v1", "create_time": 1792915200, "view_count": 250000, "like_count": 21000, "comment_count": 800, "share_count": 1500 },
+  { "id": "v2", "title": "", "cover_image_url": "https://cdn.exemple.test/v2.jpg", "share_url": "https://www.tiktok.com/@ines.danse/video/v2", "create_time": 1792483200, "view_count": 120000, "like_count": 9000, "comment_count": 300, "share_count": 600 }
+], "cursor": 1792483200000, "has_more": true }, "error": { "code": "ok", "message": "", "log_id": "L3" } }

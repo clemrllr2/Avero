@@ -1,0 +1,1 @@
+{ "data": { "user": { "open_id": "open-123", "username": "ines.danse", "display_name": "Inès", "avatar_url": "https://cdn.exemple.test/ines.jpg", "follower_count": 890000 } }, "error": { "code": "ok", "message": "", "log_id": "L2" } }

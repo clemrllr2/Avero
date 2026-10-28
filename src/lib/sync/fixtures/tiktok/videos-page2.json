@@ -1,0 +1,4 @@
+{ "data": { "videos": [
+  { "id": "v3", "title": "Battle", "cover_image_url": "https://cdn.exemple.test/v3.jpg", "share_url": "https://www.tiktok.com/@ines.danse/video/v3", "create_time": 1791100800, "view_count": 90000, "like_count": 7000, "comment_count": 200, "share_count": 400 },
+  { "id": "v4", "title": "Trop ancienne", "cover_image_url": "https://cdn.exemple.test/v4.jpg", "share_url": "https://www.tiktok.com/@ines.danse/video/v4", "create_time": 1788000000, "view_count": 50000, "like_count": 3000, "comment_count": 90, "share_count": 100 }
+], "cursor": 1788000000000, "has_more": true }, "error": { "code": "ok", "message": "", "log_id": "L4" } }
