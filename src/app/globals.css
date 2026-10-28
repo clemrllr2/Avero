@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Charte AVERO : fond froid, encre indigo, cobalt pour agir, jaune signal pour les chiffres vérifiés. */
+@theme {
+  --color-paper: #f5f6fa;
+  --color-surface: #ffffff;
+  --color-ink: #191934;
+  --color-muted: #5e6178;
+  --color-line: #dcdee8;
+  --color-cobalt: #2b35e8;
+  --color-cobalt-deep: #1d25b8;
+  --color-signal: #ffd84d;
+  --color-instagram: #d6336c;
+  --color-tiktok: #0e9f9a;
+  --color-danger: #c62a2f;
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "tnum" 0;
+}
+
+/* Titres et grands chiffres : Archivo élargi, chiffres à chasse fixe. */
+.display {
+  font-stretch: 125%;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-cobalt);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

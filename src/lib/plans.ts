@@ -46,7 +46,23 @@ export const PLAN_LABELS: Record<Plan, { name: string; description: string }> = 
   },
 };
 
-const PLANS: readonly Plan[] = ["FREE", "BASIC", "PREMIUM"];
+/** Lignes du tableau comparatif des plans ; feature null = inclus dans tous les plans. */
+export const PLAN_COMPARISON: { label: string; feature: Feature | null }[] = [
+  { label: "Vues sur 30 jours, avec tri", feature: null },
+  { label: "Abonnés", feature: "followers" },
+  { label: "Vues moyennes par publication", feature: "avgViewsPerPost" },
+  { label: "Taux d'engagement", feature: "engagementRate" },
+  { label: "Publications sur 30 jours", feature: "posts30d" },
+  { label: "Évolution des abonnés", feature: "followerGrowth30d" },
+  { label: "Filtres par réseau et nombre d'abonnés", feature: "filters" },
+  { label: "Détail publication par publication", feature: "creatorDetail" },
+  { label: "Graphiques d'évolution", feature: "charts" },
+  { label: "Audience : âge, sexe, pays (Instagram)", feature: "audience" },
+  { label: "Comparaison de 2 à 4 créateurs", feature: "compare" },
+  { label: "Export CSV", feature: "exportCsv" },
+];
+
+export const PLANS: readonly Plan[] = ["FREE", "BASIC", "PREMIUM"];
 
 export function isPlan(value: unknown): value is Plan {
   return typeof value === "string" && (PLANS as readonly string[]).includes(value);
