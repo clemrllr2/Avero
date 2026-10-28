@@ -56,7 +56,7 @@ export function canAccess(plan: Plan, feature: Feature): boolean {
   return PLAN_FEATURES[plan].includes(feature);
 }
 
-const SORT_KEYS: readonly SortKey[] = [
+export const SORT_KEYS: readonly SortKey[] = [
   "views30d",
   "followers",
   "avgViewsPerPost",
