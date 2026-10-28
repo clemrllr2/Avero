@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { FullCreatorRow } from "@/lib/aggregate";
-import { parseListQuery, queryCreatorRows, stripForPlan } from "@/lib/creator-query";
+import { effectiveQuery, parseListQuery, queryCreatorRows, stripForPlan } from "@/lib/creator-query";
 
 const syncedAt = new Date("2026-10-26T10:00:00Z");
 
@@ -105,5 +105,23 @@ describe("parseListQuery", () => {
 
   test("paramètre répété → première valeur", () => {
     expect(parseListQuery({ sort: ["followers", "views30d"] }).sort).toBe("followers");
+  });
+});
+
+describe("effectiveQuery", () => {
+  test("FREE : tri interdit et filtres retirés", () => {
+    expect(effectiveQuery("FREE", { sort: "engagementRate", order: "asc", platform: "TIKTOK", minFollowers: 10 })).toEqual({
+      sort: "views30d",
+      order: "desc",
+    });
+  });
+
+  test("FREE : tri par vues conservé avec son ordre", () => {
+    expect(effectiveQuery("FREE", { sort: "views30d", order: "asc" })).toEqual({ sort: "views30d", order: "asc" });
+  });
+
+  test("BASIC : requête inchangée", () => {
+    const query = { sort: "followers", order: "asc", platform: "TIKTOK", maxFollowers: 5000 } as const;
+    expect(effectiveQuery("BASIC", query)).toEqual(query);
   });
 });

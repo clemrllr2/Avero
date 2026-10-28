@@ -75,13 +75,22 @@ function compareBy(sort: SortKey, order: "asc" | "desc") {
   };
 }
 
+/** La requête réellement appliquée : tri autorisé par le plan (sinon vues décroissantes), filtres seulement en BASIC+. */
+export function effectiveQuery(plan: Plan, query: CreatorListQuery): CreatorListQuery {
+  const sorted = allowedSortKeys(plan).includes(query.sort)
+    ? { sort: query.sort, order: query.order }
+    : { ...DEFAULT_QUERY };
+  if (!canAccess(plan, "filters")) return sorted;
+  return { ...query, ...sorted };
+}
+
 export function queryCreatorRows(
   rows: FullCreatorRow[],
   plan: Plan,
   query: CreatorListQuery,
 ): CreatorRow[] {
-  const effective = allowedSortKeys(plan).includes(query.sort) ? query : DEFAULT_QUERY;
-  const filtered = canAccess(plan, "filters") ? rows.filter((r) => matchesFilters(r, query)) : rows;
+  const effective = effectiveQuery(plan, query);
+  const filtered = rows.filter((r) => matchesFilters(r, effective));
   return [...filtered]
     .sort(compareBy(effective.sort, effective.order))
     .map((r) => stripForPlan(r, plan));
