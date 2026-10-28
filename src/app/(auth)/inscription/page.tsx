@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { RoleTabs } from "@/components/auth/RoleTabs";
 import { SignUpForm } from "@/components/auth/SignUpForm";
+import { parseRoleSlug, roleFromSlug } from "@/lib/roles";
 
 export default function SignUpPage({ searchParams }: PageProps<"/inscription">) {
   return (
     <div className="flex flex-col gap-8">
+      <h1 className="display text-[34px] leading-tight font-extrabold">Créer un compte</h1>
       {/* Le contenu dépend de ?role= : il est lu dans un Suspense (règle Next 16). */}
       <Suspense fallback={<p className="text-muted">Chargement…</p>}>
         <SignUpContent searchParams={searchParams} />
@@ -20,32 +23,18 @@ export default function SignUpPage({ searchParams }: PageProps<"/inscription">) 
 }
 
 async function SignUpContent({ searchParams }: Pick<PageProps<"/inscription">, "searchParams">) {
-  const { role } = await searchParams;
-  const isBrand = role === "marque";
+  const slug = parseRoleSlug((await searchParams).role);
 
   return (
     <>
-      <div className="flex flex-col gap-3">
-        <h1 className="display text-3xl font-extrabold">
-          {isBrand ? "Créer un compte marque" : "Créer un compte créateur"}
-        </h1>
-        <p className="text-muted">
-          {isBrand
-            ? "Vous démarrez avec le plan Free : le nombre de vues de chaque créateur, avec tri."
-            : "Ensuite, tu relies Instagram et TikTok pour voir tes statistiques."}
-        </p>
-        <p className="text-sm">
-          <Link
-            href={isBrand ? "/inscription?role=createur" : "/inscription?role=marque"}
-            className="text-cobalt underline-offset-4 hover:underline"
-          >
-            {isBrand ? "Vous êtes créateur ?" : "Tu représentes une marque ?"}
-          </Link>
-        </p>
-      </div>
-
-      {/* key : réinitialise le formulaire quand on change de type de compte */}
-      <SignUpForm key={isBrand ? "BRAND" : "CREATOR"} role={isBrand ? "BRAND" : "CREATOR"} />
+      <RoleTabs value={slug} basePath="/inscription" />
+      <p className="-mt-2 text-muted">
+        {slug === "marque"
+          ? "Vous démarrez avec le plan Free : le nombre de vues de chaque créateur, avec tri."
+          : "Ensuite, tu relies Instagram et TikTok pour voir tes statistiques."}
+      </p>
+      {/* key : réinitialise le formulaire quand on change d'onglet */}
+      <SignUpForm key={slug} role={roleFromSlug(slug)} />
     </>
   );
 }

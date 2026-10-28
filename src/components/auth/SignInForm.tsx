@@ -4,12 +4,15 @@ import { useActionState } from "react";
 import { signInAction, type FormState } from "@/app/(auth)/actions";
 import { AuthField, FormError } from "@/components/auth/AuthField";
 import { Button } from "@/components/ui/Button";
+import type { Role } from "@/lib/types";
 
-export function SignInForm() {
+export function SignInForm({ demoRole }: { demoRole: Role }) {
   const [state, action, pending] = useActionState<FormState, FormData>(signInAction, {});
 
   return (
     <form action={action} className="flex flex-col gap-4">
+      {/* Mode démo : le rôle vient de l'onglet choisi (retiré quand Better Auth sera branché, tâche B2). */}
+      <input type="hidden" name="demoRole" value={demoRole} />
       <AuthField label="E-mail" name="email" type="email" autoComplete="email" required />
       <AuthField
         label="Mot de passe"
@@ -18,20 +21,13 @@ export function SignInForm() {
         autoComplete="current-password"
         required
       />
-      {/* Mode démo : à retirer quand Better Auth sera branché (tâche B2). */}
-      <fieldset className="flex flex-col gap-2 rounded-[10px] border border-dashed border-ink/25 p-3.5">
-        <legend className="px-1 text-sm font-medium">Mode démo : se connecter en tant que</legend>
-        <label className="flex items-center gap-2 text-[15px]">
-          <input type="radio" name="demoRole" value="CREATOR" defaultChecked /> Créateur (Léa Martin)
-        </label>
-        <label className="flex items-center gap-2 text-[15px]">
-          <input type="radio" name="demoRole" value="BRAND" /> Marque
-        </label>
-      </fieldset>
       <FormError message={state.error} />
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending} className="mt-2">
         {pending ? "Connexion…" : "Se connecter"}
       </Button>
+      <p className="rounded-xl border border-dashed border-ink/20 px-3.5 py-2.5 text-sm text-muted">
+        Mode démo : n&apos;importe quel e-mail et mot de passe fonctionnent.
+      </p>
     </form>
   );
 }

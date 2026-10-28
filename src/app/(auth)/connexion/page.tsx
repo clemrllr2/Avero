@@ -1,21 +1,43 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { RoleTabs } from "@/components/auth/RoleTabs";
 import { SignInForm } from "@/components/auth/SignInForm";
+import { parseRoleSlug, roleFromSlug } from "@/lib/roles";
 
-export default function SignInPage() {
+export default function SignInPage({ searchParams }: PageProps<"/connexion">) {
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="display text-3xl font-extrabold">Se connecter</h1>
-      <SignInForm />
+      <h1 className="display text-[34px] leading-tight font-extrabold">Se connecter</h1>
+      {/* Le contenu dépend de ?role= : il est lu dans un Suspense (règle Next 16). */}
+      <Suspense fallback={<p className="text-muted">Chargement…</p>}>
+        <SignInContent searchParams={searchParams} />
+      </Suspense>
+    </div>
+  );
+}
+
+async function SignInContent({ searchParams }: Pick<PageProps<"/connexion">, "searchParams">) {
+  const slug = parseRoleSlug((await searchParams).role);
+  const isBrand = slug === "marque";
+
+  return (
+    <>
+      <RoleTabs value={slug} basePath="/connexion" />
+      <p className="-mt-2 text-muted">
+        {isBrand
+          ? "Retrouvez les statistiques des créateurs selon votre plan."
+          : "Retrouve tes statistiques Instagram et TikTok."}
+      </p>
+      <SignInForm key={slug} demoRole={roleFromSlug(slug)} />
       <p className="text-sm text-muted">
-        Pas encore de compte ?{" "}
-        <Link href="/inscription?role=createur" className="font-semibold text-cobalt underline-offset-4 hover:underline">
-          Créateur
-        </Link>{" "}
-        ou{" "}
-        <Link href="/inscription?role=marque" className="font-semibold text-cobalt underline-offset-4 hover:underline">
-          marque
+        {isBrand ? "Pas encore de compte marque ?" : "Pas encore de compte créateur ?"}{" "}
+        <Link
+          href={`/inscription?role=${slug}`}
+          className="font-semibold text-cobalt underline-offset-4 hover:underline"
+        >
+          Créer un compte
         </Link>
       </p>
-    </div>
+    </>
   );
 }
