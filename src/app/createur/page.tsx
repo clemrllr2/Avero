@@ -5,6 +5,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { getCreatorDashboard } from "@/lib/data/creators";
 import { formatDate } from "@/lib/format";
 import { requireRole } from "@/lib/session";
+import { syncStaleConnections } from "@/lib/sync/sync";
 import { SpaceLoading } from "@/components/SpaceLayout";
 
 export default function CreatorDashboardPage() {
@@ -18,6 +19,8 @@ export default function CreatorDashboardPage() {
 
 async function Dashboard() {
   const user = await requireRole("CREATOR");
+  // Données de plus de 24 h : mises à jour avant l'affichage.
+  await syncStaleConnections(user.profileId);
   const dashboard = await getCreatorDashboard(user.profileId);
   const firstName = user.name.split(" ")[0];
 

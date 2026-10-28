@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { SimulatedConsent } from "@/components/oauth/SimulatedConsent";
 import { requireRole } from "@/lib/session";
 import { platformFromSlug } from "@/lib/sync/platforms";
+import { parseConsentForm } from "@/lib/sync/simulated";
 
 export const metadata: Metadata = { title: "Autorisation simulée · AVERO" };
 
@@ -23,7 +24,12 @@ async function Consent({ params, searchParams }: PageProps<"/oauth/simulation/[p
   const user = await requireRole("CREATOR");
   const platform = platformFromSlug((await params).platform);
   if (!platform) notFound();
-  const { state } = await searchParams;
+  const query = await searchParams;
+  const text = (key: string) => (typeof query[key] === "string" ? query[key] : "");
+  // Retour après une saisie refusée : choix réaffichés, message recalculé à partir de ces choix.
+  const values = query.error ? { username: text("username"), size: text("size"), scenario: text("scenario") } : undefined;
+  const check = values && parseConsentForm(values, platform, new Date());
+  const error = check && !check.ok ? check.error : undefined;
 
   // Nom proposé : celui du créateur, au format d'un nom d'utilisateur (« Léa Martin » → « lea.martin »).
   const suggested = user.name
@@ -34,5 +40,7 @@ async function Consent({ params, searchParams }: PageProps<"/oauth/simulation/[p
     .replace(/^\.|\.$/g, "")
     .slice(0, 30);
 
-  return <SimulatedConsent platform={platform} state={typeof state === "string" ? state : ""} suggestedUsername={suggested} />;
+  return (
+    <SimulatedConsent platform={platform} state={text("state")} suggestedUsername={suggested} values={values} error={error} />
+  );
 }

@@ -1,5 +1,5 @@
 import { disconnectAction, refreshAction } from "@/app/createur/actions";
-import { Button, ButtonLink } from "@/components/ui/Button";
+import { Button, buttonClass } from "@/components/ui/Button";
 import { PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
 import { connectHref } from "@/lib/connect";
 import { formatCompact, formatDate } from "@/lib/format";
@@ -57,7 +57,10 @@ export function NetworkCard({ platform, network }: { platform: Platform; network
           </dl>
           <div className="flex flex-wrap gap-3">
             {network.status === "EXPIRED" ? (
-              <ButtonLink href={connectHref(platform)}>Reconnecter {name}</ButtonLink>
+              // Lien classique (pas de préchargement) : il lance le parcours d'autorisation.
+              <a href={connectHref(platform)} className={buttonClass()}>
+                Reconnecter {name}
+              </a>
             ) : (
               <form action={refreshAction.bind(null, platform)}>
                 <Button type="submit">Actualiser</Button>
@@ -77,9 +80,9 @@ export function NetworkCard({ platform, network }: { platform: Platform; network
               ? "Compte professionnel requis (Créateur ou Entreprise). Le passage en compte professionnel est gratuit et se fait dans les paramètres de l'application Instagram."
               : "Connecte ton compte TikTok pour importer tes vues, likes, commentaires et partages."}
           </p>
-          <ButtonLink href={connectHref(platform)} className="w-fit">
+          <a href={connectHref(platform)} className={buttonClass("primary", "w-fit")}>
             Connecter {name}
-          </ButtonLink>
+          </a>
         </>
       )}
     </article>

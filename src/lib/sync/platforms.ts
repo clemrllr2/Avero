@@ -11,3 +11,7 @@ export function slugFor(platform: Platform): string {
 export function platformFromSlug(slug: string): Platform | null {
   return slug === "instagram" ? "INSTAGRAM" : slug === "tiktok" ? "TIKTOK" : null;
 }
+
+export function isPlatform(value: unknown): value is Platform {
+  return value === "INSTAGRAM" || value === "TIKTOK";
+}

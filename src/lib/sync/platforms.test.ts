@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { platformFromSlug, slugFor } from "@/lib/sync/platforms";
+import { isPlatform, platformFromSlug, slugFor } from "@/lib/sync/platforms";
 
 test("platformFromSlug : 'instagram' et 'tiktok' reconnus, le reste → null", () => {
   expect(platformFromSlug("instagram")).toBe("INSTAGRAM");
@@ -10,4 +10,10 @@ test("platformFromSlug : 'instagram' et 'tiktok' reconnus, le reste → null", (
 test("slugFor est l'inverse de platformFromSlug", () => {
   expect(slugFor("INSTAGRAM")).toBe("instagram");
   expect(slugFor("TIKTOK")).toBe("tiktok");
+});
+
+test("isPlatform : uniquement INSTAGRAM ou TIKTOK (valeur reçue d'un bouton, donc trafiquable)", () => {
+  expect(isPlatform("INSTAGRAM")).toBe(true);
+  expect(isPlatform("TIKTOK")).toBe(true);
+  for (const value of ["instagram", "FACEBOOK", "", null, undefined, 1]) expect(isPlatform(value)).toBe(false);
 });

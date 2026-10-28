@@ -1,7 +1,3 @@
-"use client";
-
-import { useActionState } from "react";
-import { simulatedConsentAction, type ConsentState } from "@/app/oauth/simulation/[platform]/actions";
 import { FormError } from "@/components/auth/AuthField";
 import { Button } from "@/components/ui/Button";
 import { PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
@@ -23,9 +19,9 @@ const PERMISSIONS: Record<Platform, string[]> = {
 };
 
 const SIZES: { value: SimulatedSize; label: string; hint: string }[] = [
-  { value: "small", label: "Petit", hint: "moins de 20 k" },
-  { value: "medium", label: "Moyen", hint: "20 k à 200 k" },
-  { value: "large", label: "Gros", hint: "plus de 200 k" },
+  { value: "small", label: "Petit", hint: "moins de 20\u00a0k" },
+  { value: "medium", label: "Moyen", hint: "20\u00a0k à 200\u00a0k" },
+  { value: "large", label: "Gros", hint: "plus de 200\u00a0k" },
 ];
 
 const SCENARIOS: { value: SimulatedScenario; label: string; instagramOnly?: boolean }[] = [
@@ -54,15 +50,18 @@ export function SimulatedConsent({
   platform,
   state,
   suggestedUsername,
+  values,
+  error,
 }: {
   platform: Platform;
   state: string;
   suggestedUsername: string;
+  /** Choix saisis, réaffichés après une saisie refusée */
+  values?: { username: string; size: string; scenario: string };
+  error?: string;
 }) {
-  const [result, action, pending] = useActionState<ConsentState, FormData>(simulatedConsentAction, {});
   const name = PLATFORM_NAMES[platform];
   const accent = ACCENT[platform];
-  const values = result.values;
 
   return (
     <section className="w-full max-w-[460px] overflow-hidden rounded-3xl border border-line bg-surface">
@@ -92,7 +91,8 @@ export function SimulatedConsent({
           </ul>
         </div>
 
-        <form action={action} className="flex flex-col gap-5">
+        {/* Envoi classique (vraie redirection du navigateur), comme sur l'écran d'un réseau. */}
+        <form method="post" action={`/oauth/simulation/${slugFor(platform)}/authorize`} className="flex flex-col gap-5">
           <input type="hidden" name="platform" value={slugFor(platform)} />
           <input type="hidden" name="state" value={state} />
 
@@ -151,14 +151,14 @@ export function SimulatedConsent({
             </select>
           </label>
 
-          <FormError message={result.error} />
+          <FormError message={error} />
 
           <div className="grid grid-cols-2 gap-3">
-            <Button type="submit" name="decision" value="deny" variant="secondary" formNoValidate disabled={pending}>
+            <Button type="submit" name="decision" value="deny" variant="secondary" formNoValidate>
               Refuser
             </Button>
-            <Button type="submit" name="decision" value="allow" disabled={pending}>
-              {pending ? "Connexion…" : "Autoriser"}
+            <Button type="submit" name="decision" value="allow">
+              Autoriser
             </Button>
           </div>
         </form>
