@@ -1,0 +1,35 @@
+export interface NetworkMessage {
+  tone: "success" | "error" | "info";
+  text: string;
+}
+
+const ERRORS: Record<string, string> = {
+  cancelled: "Connexion annulée.",
+  invalid_state: "La connexion a été refusée par sécurité. Réessaie.",
+  not_professional:
+    "Ce compte Instagram n'est pas professionnel. Passe-le en compte Créateur ou Entreprise dans l'application Instagram, puis réessaie.",
+  already_linked: "Ce compte est déjà relié à un autre profil AVERO.",
+  sync_failed: "Mise à jour impossible, réessaie plus tard.",
+};
+
+const SUCCESSES: Record<string, string> = {
+  connected: "Compte connecté. Tes statistiques sont à jour.",
+  refreshed: "Statistiques mises à jour.",
+  disconnected: "Réseau déconnecté. Ses données ont été supprimées.",
+};
+
+type Params = Record<string, string | string[] | undefined>;
+
+/** Message à afficher sur « Mes réseaux » d'après ?error=, ?success= ou ?demo= ; null si rien de connu. */
+export function networkMessage(params: Params): NetworkMessage | null {
+  const error = params.error;
+  const success = params.success;
+  if (typeof error === "string" && Object.hasOwn(ERRORS, error)) return { tone: "error", text: ERRORS[error] };
+  if (typeof success === "string" && Object.hasOwn(SUCCESSES, success)) {
+    return { tone: "success", text: SUCCESSES[success] };
+  }
+  if (params.demo !== undefined) {
+    return { tone: "info", text: "Disponible bientôt : la connexion réelle aux réseaux arrive avec le backend." };
+  }
+  return null;
+}

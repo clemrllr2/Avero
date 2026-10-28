@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { isPlan } from "@/lib/plans";
 import { homePathFor } from "@/lib/roles";
 import { SESSION_COOKIE } from "@/lib/session-cookie";
@@ -52,6 +53,8 @@ export async function requireRole(role: Role): Promise<CurrentUser> {
   const user = await getCurrentUser();
   if (!user) redirect("/connexion");
   if (user.role !== role) redirect(homePathFor(user.role));
+  // Les pages connectées sont calculées à chaque visite (elles utilisent la date du jour pour les 30 derniers jours).
+  await connection();
   return user;
 }
 
