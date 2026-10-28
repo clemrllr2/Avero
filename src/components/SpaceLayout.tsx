@@ -3,6 +3,7 @@ import { Suspense, type ReactNode } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { NavLink } from "@/components/NavLink";
 import { UserMenu } from "@/components/UserMenu";
+import { Skeleton } from "@/components/visual/Skeleton";
 
 /** Cadre commun des espaces créateur et marque. */
 export function SpaceLayout({
@@ -45,5 +46,15 @@ export function SpaceLayout({
 }
 
 export function SpaceLoading() {
-  return <p className="text-muted">Chargement…</p>;
+  return (
+    <div role="status" className="flex flex-col gap-6">
+      <span className="sr-only">Chargement…</span>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+        {[0, 1, 2].map((i) => (
+          <Skeleton key={i} className="h-32 rounded-3xl" />
+        ))}
+      </div>
+      <Skeleton className="h-72 rounded-3xl" />
+    </div>
+  );
 }
