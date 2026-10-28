@@ -64,6 +64,13 @@ export const PLAN_COMPARISON: { label: string; feature: Feature | null }[] = [
 
 export const PLANS: readonly Plan[] = ["FREE", "BASIC", "PREMIUM"];
 
+/** Libellés des fonctionnalités incluses dans un plan, dans l'ordre du comparatif. */
+export function planCardFeatures(plan: Plan): string[] {
+  return PLAN_COMPARISON.filter(
+    ({ feature }) => feature === null || PLAN_FEATURES[plan].includes(feature),
+  ).map(({ label }) => label);
+}
+
 export function isPlan(value: unknown): value is Plan {
   return typeof value === "string" && (PLANS as readonly string[]).includes(value);
 }

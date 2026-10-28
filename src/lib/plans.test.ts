@@ -1,5 +1,13 @@
 import { describe, expect, test } from "vitest";
-import { PLAN_FEATURES, allowedSortKeys, canAccess, isPlan, type Feature } from "@/lib/plans";
+import {
+  PLAN_COMPARISON,
+  PLAN_FEATURES,
+  allowedSortKeys,
+  canAccess,
+  isPlan,
+  planCardFeatures,
+  type Feature,
+} from "@/lib/plans";
 
 const ALL_FEATURES: Feature[] = [
   "followers",
@@ -70,5 +78,21 @@ describe("isPlan", () => {
     expect(isPlan("basic")).toBe(false);
     expect(isPlan(undefined)).toBe(false);
     expect(isPlan(null)).toBe(false);
+  });
+});
+
+describe("planCardFeatures", () => {
+  test("FREE : uniquement les vues", () => {
+    expect(planCardFeatures("FREE")).toEqual(["Vues sur 30 jours, avec tri"]);
+  });
+
+  test("BASIC : 7 fonctionnalités, la dernière étant les filtres", () => {
+    const features = planCardFeatures("BASIC");
+    expect(features).toHaveLength(7);
+    expect(features.at(-1)).toBe("Filtres par réseau et nombre d'abonnés");
+  });
+
+  test("PREMIUM : toutes les lignes du comparatif, dans l'ordre", () => {
+    expect(planCardFeatures("PREMIUM")).toEqual(PLAN_COMPARISON.map((row) => row.label));
   });
 });
