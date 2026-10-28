@@ -27,7 +27,7 @@ export function Avatar({
       className={`display relative inline-grid shrink-0 place-items-center overflow-hidden rounded-full font-bold text-white ${SIZES[size]} ${
         ring ? "ring-4 ring-white/90" : ""
       } ${className}`}
-      style={{ backgroundImage: `radial-gradient(circle at 30% 25%, rgb(255 255 255 / 0.35), transparent 55%), linear-gradient(135deg, ${from}, ${to})` }}
+      style={{ backgroundImage: `radial-gradient(circle at 30% 25%, rgb(255 255 255 / 0.2), transparent 50%), linear-gradient(135deg, ${from}, ${to})` }}
     >
       {initials(name)}
     </span>

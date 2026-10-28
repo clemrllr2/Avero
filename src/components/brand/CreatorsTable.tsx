@@ -87,7 +87,7 @@ export function CreatorsTable({
         <Podium rows={rows} metricLabel={sortColumn.label} render={sortColumn.render} linkable={premium} />
       )}
       {premium && (
-        <div className="section-dark sticky top-20 z-30 flex flex-wrap items-center justify-between gap-3 rounded-full py-2 pr-2 pl-5 shadow-[0_20px_40px_-20px_rgba(15,16,48,0.7)]">
+        <div className="section-dark sticky top-[7.5rem] z-30 sm:top-20 flex flex-wrap items-center justify-between gap-3 rounded-full py-2 pr-2 pl-5 shadow-[0_20px_40px_-20px_rgba(15,16,48,0.7)]">
           <span className="flex items-center gap-3 text-sm text-paper/70">
             {selected.length > 0 && (
               <span aria-hidden className="flex -space-x-2">

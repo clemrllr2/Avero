@@ -141,7 +141,7 @@ export function CreatorsSection() {
                   </linearGradient>
                 </defs>
                 <path d={`${CURVE} L 400 140 L 0 140 Z`} fill="url(#preview-area)" />
-                <path data-curve d={CURVE} fill="none" stroke="url(#preview-line)" strokeWidth={3.5} strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                <path data-curve d={CURVE} fill="none" stroke="url(#preview-line)" strokeWidth={3.5} strokeLinecap="round" />
               </svg>
             </div>
           </div>

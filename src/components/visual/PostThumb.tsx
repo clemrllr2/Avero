@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Icon } from "@/components/visual/Icon";
 import { formatCompact } from "@/lib/format";
 import type { Platform } from "@/lib/types";
-import { avatarColors, seededPick } from "@/lib/visual";
+import { seededPick, thumbColors } from "@/lib/visual";
 
 /** Quatre « scènes » abstraites (viewBox 90 × 160) qui évoquent une vidéo sans en être une. */
 function Scene({ variant }: { variant: number }) {
@@ -64,7 +64,7 @@ export function PostThumb({
   badge?: ReactNode;
   className?: string;
 }) {
-  const [from, to] = avatarColors(seed);
+  const [from, to] = thumbColors(seed);
   return (
     <div
       className={`relative isolate aspect-[9/16] overflow-hidden rounded-2xl text-white shadow-[0_24px_50px_-20px_rgba(15,16,48,0.55)] ${className}`}

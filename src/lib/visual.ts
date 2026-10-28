@@ -1,15 +1,31 @@
-/** Empreinte stable d'une chaîne (FNV-1a 32 bits). */
+/** Empreinte stable d'une chaîne (FNV-1a 32 bits, brassée). */
 function hash(text: string): number {
   let h = 0x811c9dc5;
   for (let i = 0; i < text.length; i++) {
     h ^= text.charCodeAt(i);
     h = Math.imul(h, 0x01000193);
   }
+  // Brassage final (murmur3) : des chaînes proches donnent des empreintes très différentes.
+  h ^= h >>> 16;
+  h = Math.imul(h, 0x85ebca6b);
+  h ^= h >>> 13;
+  h = Math.imul(h, 0xc2b2ae35);
+  h ^= h >>> 16;
   return h >>> 0;
 }
 
-/** Deux couleurs de dégradé (teintes voisines, vives), toujours les mêmes pour un même nom. */
+/** Teintes des avatars : du bleu au rose framboise (215° à 345°), où le blanc reste lisible ; ni jaune ni vert. */
+const HUE_START = 215;
+const HUE_RANGE = 131;
+
+/** Deux couleurs de dégradé (teintes voisines), toujours les mêmes pour un même nom, assez foncées pour des initiales blanches. */
 export function avatarColors(seed: string): [string, string] {
+  const hue = HUE_START + (hash(seed) % HUE_RANGE);
+  return [`hsl(${hue} 72% 52%)`, `hsl(${(hue + 30) % 360} 72% 42%)`];
+}
+
+/** Dégradé des vignettes de posts : tout le cercle chromatique (le texte y repose sur un voile sombre). */
+export function thumbColors(seed: string): [string, string] {
   const hue = hash(seed) % 360;
   return [`hsl(${hue} 80% 60%)`, `hsl(${(hue + 50) % 360} 75% 48%)`];
 }
@@ -23,8 +39,9 @@ export function seededPick(seed: string, max: number): number {
 export function initials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return "?";
-  const first = words[0][0];
-  const last = words.length > 1 ? words[words.length - 1][0] : "";
+  // Array.from découpe par caractère (un emoji compte pour un seul caractère).
+  const first = Array.from(words[0])[0];
+  const last = words.length > 1 ? Array.from(words[words.length - 1])[0] : "";
   return (first + last).toUpperCase();
 }
 

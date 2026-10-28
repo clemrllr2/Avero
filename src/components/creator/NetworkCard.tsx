@@ -23,7 +23,7 @@ export function NetworkCard({ platform, network }: { platform: Platform; network
           </span>
           <div className="flex flex-col">
             <h2 className="display text-xl font-bold">{name}</h2>
-            {network && <span className="text-sm text-white/75">@{network.username}</span>}
+            {network && <span className="text-sm font-medium text-white">@{network.username}</span>}
           </div>
           {network?.simulated && (
             <span title="Compte relié en mode simulé" className="rounded-full bg-signal px-2 py-0.5 text-xs font-semibold text-ink">
