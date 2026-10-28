@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { followersSeries, viewsByWeek } from "@/lib/charts";
+import { followersSeries, totalFollowers, viewsByWeek } from "@/lib/charts";
 import type { NetworkData, PostData } from "@/lib/types";
 
 const now = new Date("2026-10-26T12:00:00Z");
@@ -62,5 +62,20 @@ describe("followersSeries", () => {
       { date: "2026-10-21", TIKTOK: 3000 },
       { date: "2026-10-26", INSTAGRAM: 1000, TIKTOK: 3100 },
     ]);
+  });
+});
+
+describe("totalFollowers", () => {
+  test("somme des réseaux à chaque relevé ; un réseau sans relevé ce jour-là garde sa dernière valeur", () => {
+    const points = [
+      { date: "2026-10-01", INSTAGRAM: 100 },
+      { date: "2026-10-02", INSTAGRAM: 110, TIKTOK: 50 },
+      { date: "2026-10-03", TIKTOK: 60 },
+    ];
+    expect(totalFollowers(points)).toEqual([100, 160, 170]);
+  });
+
+  test("aucun relevé → liste vide", () => {
+    expect(totalFollowers([])).toEqual([]);
   });
 });

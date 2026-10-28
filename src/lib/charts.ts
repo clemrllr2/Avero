@@ -33,3 +33,14 @@ export function followersSeries(networks: Pick<NetworkData, "platform" | "snapsh
   }
   return [...byDay.values()].sort((a, b) => a.date.localeCompare(b.date));
 }
+
+/** Abonnés tous réseaux confondus à chaque relevé ; un réseau absent ce jour-là compte pour sa dernière valeur connue. */
+export function totalFollowers(points: FollowersPoint[]): number[] {
+  const last: Partial<Record<Platform, number>> = {};
+  return points.map((point) => {
+    for (const platform of ["INSTAGRAM", "TIKTOK"] as const) {
+      if (point[platform] !== undefined) last[platform] = point[platform];
+    }
+    return (last.INSTAGRAM ?? 0) + (last.TIKTOK ?? 0);
+  });
+}

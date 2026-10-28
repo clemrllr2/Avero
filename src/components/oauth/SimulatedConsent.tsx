@@ -1,7 +1,7 @@
 import { FormError } from "@/components/auth/AuthField";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/visual/Icon";
-import { PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
+import { PLATFORM_BANNERS, PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
 import { slugFor } from "@/lib/sync/platforms";
 import type { SimulatedScenario, SimulatedSize } from "@/lib/sync/simulated";
 import type { Platform } from "@/lib/types";
@@ -33,17 +33,9 @@ const SCENARIOS: { value: SimulatedScenario; label: string; instagramOnly?: bool
   { value: "unavailable_later", label: "Réseau indisponible à la prochaine actualisation" },
 ];
 
-const ACCENT: Record<Platform, { banner: string; dot: string; ring: string }> = {
-  INSTAGRAM: {
-    banner: "bg-gradient-to-br from-[#f58529] via-[#dd2a7b] to-[#8134af]",
-    dot: "bg-instagram",
-    ring: "has-checked:border-instagram has-checked:bg-instagram/5",
-  },
-  TIKTOK: {
-    banner: "bg-[#0b0b16] bg-[radial-gradient(circle_at_20%_30%,rgba(37,244,238,0.45),transparent_45%),radial-gradient(circle_at_85%_70%,rgba(254,44,85,0.45),transparent_45%)]",
-    dot: "bg-tiktok",
-    ring: "has-checked:border-tiktok has-checked:bg-tiktok/5",
-  },
+const ACCENT: Record<Platform, { dot: string; ring: string }> = {
+  INSTAGRAM: { dot: "bg-instagram", ring: "has-checked:border-instagram has-checked:bg-instagram/5" },
+  TIKTOK: { dot: "bg-tiktok", ring: "has-checked:border-tiktok has-checked:bg-tiktok/5" },
 };
 
 function CheckIcon() {
@@ -74,7 +66,7 @@ export function SimulatedConsent({
 
   return (
     <section className="w-full max-w-[460px] overflow-hidden rounded-[32px] border border-white bg-surface shadow-[0_40px_90px_-40px_rgba(25,25,52,0.45)]">
-      <div aria-hidden className={`flex h-28 items-center justify-center gap-4 ${accent.banner}`}>
+      <div aria-hidden className={`flex h-28 items-center justify-center gap-4 ${PLATFORM_BANNERS[platform]}`}>
         <span className="display grid size-14 place-items-center rounded-2xl bg-night text-lg font-extrabold text-white shadow-lg ring-4 ring-white/20">
           A
         </span>

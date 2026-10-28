@@ -1,6 +1,6 @@
 "use client";
 
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { PLATFORM_NAMES } from "@/components/ui/PlatformBadge";
 import type { FollowersPoint } from "@/lib/charts";
 import { formatCompact, formatNumber } from "@/lib/format";
@@ -43,10 +43,18 @@ export function FollowersChart({ data, platforms }: { data: FollowersPoint[]; pl
           ))}
         </ul>
       )}
-      <div role="img" aria-label="Évolution des abonnés par réseau" className="h-56">
+      <div role="img" aria-label="Évolution des abonnés par réseau" className="h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
-            <CartesianGrid vertical={false} stroke={GRID} />
+          <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
+            <defs>
+              {platforms.map((p) => (
+                <linearGradient key={p} id={`followers-${p}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={SERIES[p].color} stopOpacity={0.28} />
+                  <stop offset="100%" stopColor={SERIES[p].color} stopOpacity={0} />
+                </linearGradient>
+              ))}
+            </defs>
+            <CartesianGrid vertical={false} stroke={GRID} strokeDasharray="3 4" />
             <XAxis
               dataKey="date"
               tickFormatter={formatDay}
@@ -66,14 +74,15 @@ export function FollowersChart({ data, platforms }: { data: FollowersPoint[]; pl
             <Tooltip
               formatter={(value, name) => [formatNumber(Number(value)), PLATFORM_NAMES[name as Platform] ?? name]}
               labelFormatter={(label) => formatDay(String(label))}
-              contentStyle={{ borderRadius: 12, borderColor: GRID, fontSize: 13 }}
+              contentStyle={{ borderRadius: 14, borderColor: GRID, fontSize: 13, boxShadow: "0 12px 30px -12px rgba(25,25,52,0.25)" }}
             />
             {platforms.map((p) => (
-              <Line
+              <Area
                 key={p}
                 type="monotone"
                 dataKey={p}
                 stroke={SERIES[p].color}
+                fill={`url(#followers-${p})`}
                 strokeWidth={2}
                 strokeDasharray={SERIES[p].dash}
                 dot={false}
@@ -81,7 +90,7 @@ export function FollowersChart({ data, platforms }: { data: FollowersPoint[]; pl
                 connectNulls
               />
             ))}
-          </LineChart>
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>

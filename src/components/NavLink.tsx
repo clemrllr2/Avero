@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NAV_PILL } from "@/components/AppHeader";
 
 export function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   const active = usePathname() === href;
@@ -9,7 +10,7 @@ export function NavLink({ href, children }: { href: string; children: React.Reac
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={`border-b-2 py-1 ${active ? "border-cobalt font-semibold" : "border-transparent text-muted hover:text-ink"}`}
+      className={`${NAV_PILL} ${active ? "bg-paper text-ink" : "text-paper/65 hover:bg-paper/8 hover:text-paper"}`}
     >
       {children}
     </Link>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOutAction } from "@/app/(auth)/actions";
+import { Avatar } from "@/components/visual/Avatar";
 import { PLAN_LABELS } from "@/lib/plans";
 import { getCurrentUser } from "@/lib/session";
 
@@ -10,7 +11,10 @@ export async function UserMenu() {
 
   return (
     <div className="flex items-center gap-3 text-sm">
-      <span className="hidden font-medium sm:inline">{user.name}</span>
+      <span className="flex items-center gap-2.5">
+        <Avatar name={user.name} size="sm" />
+        <span className="hidden font-medium sm:inline">{user.name}</span>
+      </span>
       {user.plan && (
         <Link
           href="/marque/plans"
@@ -21,7 +25,7 @@ export async function UserMenu() {
         </Link>
       )}
       <form action={signOutAction}>
-        <button type="submit" className="text-muted underline-offset-4 hover:text-ink hover:underline">
+        <button type="submit" className="rounded-full border border-paper/15 px-3 py-1.5 text-paper/70 transition-colors hover:border-paper/40 hover:text-paper">
           Se déconnecter
         </button>
       </form>
