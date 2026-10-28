@@ -9,7 +9,7 @@ export function Logo() {
   );
 }
 
-/** En-tête commun ; la zone de droite (connexion, menu) est fournie par la page. */
+/** En-tête commun ; la navigation et la zone de droite (connexion, menu) sont fournies par la page. */
 export function AppHeader({ nav, right }: { nav?: ReactNode; right?: ReactNode }) {
   return (
     <header className="border-b border-line bg-paper/90">
@@ -20,6 +20,11 @@ export function AppHeader({ nav, right }: { nav?: ReactNode; right?: ReactNode }
         </div>
         <div className="flex items-center gap-3">{right}</div>
       </div>
+      {nav && (
+        <nav className="mx-auto flex max-w-6xl gap-6 overflow-x-auto px-4 pb-3 text-[15px] sm:hidden">
+          {nav}
+        </nav>
+      )}
     </header>
   );
 }
