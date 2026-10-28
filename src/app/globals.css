@@ -1,14 +1,16 @@
 @import "tailwindcss";
 
-/* Charte AVERO : fond froid, encre indigo, cobalt pour agir, jaune signal pour les chiffres vérifiés. */
+/* Charte AVERO (spec 3.2) : indigo nuit et papier en alternance, cobalt pour agir, signal pour les chiffres vérifiés. */
 @theme {
+  --color-night: #0f1030;
+  --color-night-soft: #1a1c48;
   --color-paper: #f5f6fa;
   --color-surface: #ffffff;
   --color-ink: #191934;
   --color-muted: #5e6178;
   --color-line: #dcdee8;
-  --color-cobalt: #2b35e8;
-  --color-cobalt-deep: #1d25b8;
+  --color-cobalt: #3b46f1;
+  --color-cobalt-deep: #2b34cf;
   --color-signal: #ffd84d;
   --color-instagram: #d6336c;
   --color-tiktok: #0e9f9a;
@@ -24,7 +26,6 @@ html {
 
 body {
   font-family: var(--font-sans);
-  font-feature-settings: "tnum" 0;
 }
 
 /* Titres et grands chiffres : Archivo élargi, chiffres à chasse fixe. */
@@ -34,9 +35,51 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* Section sombre : fond nuit, texte papier. */
+.section-dark {
+  background-color: var(--color-night);
+  color: var(--color-paper);
+}
+
+/* Léger grain sur les fonds sombres. */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
 :focus-visible {
   outline: 2px solid var(--color-cobalt);
   outline-offset: 2px;
+}
+
+/*
+ * Anti-flash : la classe "motion" est posée sur <html> par un script inline avant le premier affichage,
+ * seulement si les animations sont autorisées. Sans JavaScript, ou en mouvement réduit, tout reste visible.
+ */
+.motion [data-motion],
+.motion [data-motion-children] > * {
+  visibility: hidden;
+}
+
+/* Lenis (défilement fluide) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
