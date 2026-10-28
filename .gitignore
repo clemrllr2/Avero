@@ -43,3 +43,6 @@ next-env.d.ts
 
 # superpowers (fichiers de suivi locaux)
 /.superpowers/
+
+# client Prisma généré (recréé par « prisma generate »)
+/src/generated/

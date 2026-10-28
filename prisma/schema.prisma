@@ -1,0 +1,117 @@
+// Schéma de la base de données AVERO (Supabase / PostgreSQL).
+// Les adresses de connexion sont lues dans .env par prisma.config.ts : jamais ici.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  CREATOR
+  BRAND
+}
+
+enum Plan {
+  FREE
+  BASIC
+  PREMIUM
+}
+
+enum Platform {
+  INSTAGRAM
+  TIKTOK
+}
+
+enum ConnectionStatus {
+  ACTIVE
+  EXPIRED
+}
+
+model CreatorProfile {
+  id          String             @id @default(cuid())
+  userId      String             @unique
+  displayName String
+  createdAt   DateTime           @default(now())
+  connections SocialConnection[]
+}
+
+model BrandProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  companyName String
+  plan        Plan     @default(FREE)
+  createdAt   DateTime @default(now())
+}
+
+/// Un compte Instagram ou TikTok relié à un créateur. Les jetons sont chiffrés avant d'être enregistrés.
+model SocialConnection {
+  id             String           @id @default(cuid())
+  creatorId      String
+  creator        CreatorProfile   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  platform       Platform
+  externalUserId String
+  username       String
+  avatarUrl      String?
+  accessToken    String
+  refreshToken   String?
+  tokenExpiresAt DateTime?
+  status         ConnectionStatus @default(ACTIVE)
+  /// null tant que la première synchronisation n'a pas eu lieu
+  lastSyncedAt   DateTime?
+  createdAt      DateTime         @default(now())
+  snapshots      AccountSnapshot[]
+  posts          Post[]
+  audience       Audience?
+
+  // Un seul compte par réseau et par créateur, et un compte ne peut être relié qu'à un seul profil AVERO.
+  @@unique([creatorId, platform])
+  @@unique([platform, externalUserId])
+}
+
+/// Nombre d'abonnés relevé un jour donné (au plus un relevé par jour).
+model AccountSnapshot {
+  id           String           @id @default(cuid())
+  connectionId String
+  connection   SocialConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  date         DateTime         @db.Date
+  followers    Int
+
+  @@unique([connectionId, date])
+}
+
+model Post {
+  id           String           @id @default(cuid())
+  connectionId String
+  connection   SocialConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  externalId   String
+  publishedAt  DateTime
+  caption      String?
+  thumbnailUrl String?
+  permalink    String?
+  views        Int
+  likes        Int
+  comments     Int
+  shares       Int
+  /// null pour TikTok
+  saves        Int?
+  /// null pour TikTok
+  reach        Int?
+
+  @@unique([connectionId, externalId])
+  @@index([connectionId, publishedAt])
+}
+
+/// Répartition de l'audience (Instagram uniquement). Chaque champ JSON est une liste { label, count }.
+model Audience {
+  id           String           @id @default(cuid())
+  connectionId String           @unique
+  connection   SocialConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  ages         Json
+  genders      Json
+  countries    Json
+  updatedAt    DateTime         @updatedAt
+}
