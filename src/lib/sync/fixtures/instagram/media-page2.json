@@ -1,0 +1,7 @@
+{
+  "data": [
+    { "id": "m3", "caption": "Avant / après", "media_type": "CAROUSEL_ALBUM", "permalink": "https://www.instagram.com/p/m3/", "media_url": "https://cdn.exemple.test/m3.jpg", "timestamp": "2026-10-10T08:00:00+0000", "like_count": 300, "comments_count": 9 },
+    { "id": "m4", "caption": "Trop ancien", "media_type": "IMAGE", "permalink": "https://www.instagram.com/p/m4/", "timestamp": "2026-09-01T08:00:00+0000", "like_count": 100, "comments_count": 1 }
+  ],
+  "paging": { "cursors": { "after": "AFTER2" }, "next": "https://graph.instagram.com/me/media?page=3" }
+}

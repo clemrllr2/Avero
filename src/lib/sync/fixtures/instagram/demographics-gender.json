@@ -1,0 +1,3 @@
+{ "data": [{ "name": "follower_demographics", "period": "lifetime", "total_value": { "breakdowns": [{ "dimension_keys": ["gender"], "results": [
+  { "dimension_values": ["F"], "value": 30000 }, { "dimension_values": ["M"], "value": 17000 }, { "dimension_values": ["U"], "value": 1200 }
+] }] }, "id": "x/insights/follower_demographics/lifetime" }] }

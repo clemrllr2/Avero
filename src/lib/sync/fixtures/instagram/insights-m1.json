@@ -1,0 +1,6 @@
+{ "data": [
+  { "name": "views", "period": "lifetime", "values": [{ "value": 15000 }], "id": "m1/insights/views/lifetime" },
+  { "name": "reach", "period": "lifetime", "values": [{ "value": 11000 }], "id": "m1/insights/reach/lifetime" },
+  { "name": "saved", "period": "lifetime", "values": [{ "value": 210 }], "id": "m1/insights/saved/lifetime" },
+  { "name": "shares", "period": "lifetime", "values": [{ "value": 95 }], "id": "m1/insights/shares/lifetime" }
+] }

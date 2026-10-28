@@ -1,0 +1,7 @@
+{
+  "data": [
+    { "id": "m1", "caption": "Ma routine du matin", "media_type": "VIDEO", "permalink": "https://www.instagram.com/reel/m1/", "thumbnail_url": "https://cdn.exemple.test/m1.jpg", "timestamp": "2026-10-25T08:00:00+0000", "like_count": 900, "comments_count": 40 },
+    { "id": "m2", "media_type": "IMAGE", "permalink": "https://www.instagram.com/p/m2/", "media_url": "https://cdn.exemple.test/m2.jpg", "timestamp": "2026-10-20T08:00:00+0000", "like_count": 500, "comments_count": 12 }
+  ],
+  "paging": { "cursors": { "after": "AFTER1" }, "next": "https://graph.instagram.com/me/media?page=2" }
+}
