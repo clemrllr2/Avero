@@ -38,3 +38,6 @@ export function parseCompareIds(value: string | string[] | undefined): string[] 
     .filter(Boolean);
   return [...new Set(ids)].slice(0, MAX_COMPARED);
 }
+
+/** Couleur de chaque créateur comparé, dans l'ordre de sélection (palette validée, skill dataviz). */
+export const COMPARE_COLORS = ["#3b46f1", "#e8890c", "#0e9f9a", "#9b3fb5"] as const;
