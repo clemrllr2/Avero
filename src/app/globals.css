@@ -11,6 +11,7 @@
   --color-line: #dcdee8;
   --color-cobalt: #3b46f1;
   --color-cobalt-deep: #2b34cf;
+  --color-violet: #7c5cff;
   --color-signal: #ffd84d;
   --color-instagram: #d6336c;
   --color-tiktok: #0e9f9a;
@@ -48,6 +49,113 @@ body {
     position: relative;
     isolation: isolate;
   }
+  /* Aurore : taches de lumière floues qui dérivent lentement (décor, figé en mouvement réduit). */
+  .aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .aurora-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    will-change: transform;
+    animation: aurora-drift 22s ease-in-out infinite alternate;
+  }
+  .aurora-blob:nth-child(2) {
+    animation-duration: 28s;
+    animation-delay: -6s;
+  }
+  .aurora-blob:nth-child(3) {
+    animation-duration: 34s;
+    animation-delay: -12s;
+  }
+  .aurora-blob:nth-child(4) {
+    animation-duration: 26s;
+    animation-delay: -18s;
+  }
+
+  /* Verre : surface translucide floutée, filet de 1 px. */
+  .glass {
+    background-color: rgb(255 255 255 / 0.07);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+  .glass-light {
+    background-color: rgb(255 255 255 / 0.72);
+    border: 1px solid rgb(25 25 52 / 0.08);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  }
+
+  /* Bordure en dégradé (élément mis en avant) : le fond de l'élément reste le sien. */
+  .gradient-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .gradient-border::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1.5px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--color-cobalt), var(--color-violet) 45%, var(--color-instagram) 80%, var(--color-signal));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Texte en dégradé : grands chiffres. */
+  .text-gradient {
+    background: linear-gradient(100deg, #8f97ff 0%, #b9a6ff 40%, #ff8fb4 75%, #ffd84d 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-ink {
+    background: linear-gradient(100deg, var(--color-cobalt) 0%, var(--color-violet) 55%, var(--color-instagram) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Trame de points discrète. */
+  .dot-grid {
+    background-image: radial-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .dot-grid-ink {
+    background-image: radial-gradient(rgb(25 25 52 / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* Bloc de chargement avec reflet. */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    background-color: rgb(25 25 52 / 0.06);
+  }
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent);
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+
+  /* Vignettes et bulles qui flottent doucement (hero, panneaux). */
+  .float-slow {
+    animation: float 7s ease-in-out infinite;
+  }
+
   .grain::before {
     content: "";
     position: absolute;
@@ -100,11 +208,40 @@ html.lenis body {
   overflow: clip;
 }
 
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8%, -6%, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(-6%, 5%, 0) scale(0.94);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

@@ -1,5 +1,11 @@
 import { expect, test } from "vitest";
-import { bestIndex, parseCompareIds } from "@/lib/compare";
+import { bestIndex, normalizeForRadar, parseCompareIds } from "@/lib/compare";
+
+test("normalizeForRadar : chaque indicateur ramené sur 100 par rapport au meilleur créateur", () => {
+  expect(normalizeForRadar([[10, null], [20, 0]])).toEqual([[50, 0], [100, 0]]);
+  expect(normalizeForRadar([[-5, 3], [-10, 6]])).toEqual([[0, 50], [0, 100]]);
+  expect(normalizeForRadar([])).toEqual([]);
+});
 
 test("bestIndex : plus grande valeur, valeurs absentes ignorées", () => {
   expect(bestIndex([10, 30, 20])).toBe(1);
