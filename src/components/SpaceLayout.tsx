@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense, type ReactNode } from "react";
 import { AppHeader } from "@/components/AppHeader";
 import { NavLink } from "@/components/NavLink";
@@ -14,11 +15,22 @@ export function SpaceLayout({
   return (
     <>
       <AppHeader
-        nav={links.map((l) => (
-          <NavLink key={l.href} href={l.href}>
-            {l.label}
-          </NavLink>
-        ))}
+        nav={
+          // NavLink lit l'adresse (onglet actif) : dans un Suspense, avec des liens simples en attendant (règle Next 16).
+          <Suspense
+            fallback={links.map((l) => (
+              <Link key={l.href} href={l.href} className="border-b-2 border-transparent py-1 text-muted">
+                {l.label}
+              </Link>
+            ))}
+          >
+            {links.map((l) => (
+              <NavLink key={l.href} href={l.href}>
+                {l.label}
+              </NavLink>
+            ))}
+          </Suspense>
+        }
         right={
           <Suspense fallback={null}>
             <UserMenu />

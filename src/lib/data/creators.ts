@@ -1,6 +1,7 @@
 import { buildDashboard, buildFullRow, type CreatorDashboard } from "@/lib/aggregate";
 import { queryCreatorRows, type CreatorListQuery, type CreatorRow } from "@/lib/creator-query";
 import { generateMockCreators } from "@/lib/data/mock/generate";
+import { MAX_COMPARED } from "@/lib/compare";
 import { canAccess } from "@/lib/plans";
 import type { CreatorSource, Plan } from "@/lib/types";
 
@@ -31,8 +32,6 @@ export async function getCreatorDetailForBrand(
   if (!canAccess(plan, "creatorDetail")) return null;
   return getCreatorDashboard(creatorId);
 }
-
-export const MAX_COMPARED = 4;
 
 export async function getCreatorsForComparison(plan: Plan, ids: string[]): Promise<CreatorDashboard[]> {
   if (!canAccess(plan, "compare")) return [];

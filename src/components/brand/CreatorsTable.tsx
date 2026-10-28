@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { PlatformBadge } from "@/components/ui/PlatformBadge";
+import { MAX_COMPARED } from "@/lib/compare";
 import type { CreatorListQuery, CreatorRow } from "@/lib/creator-query";
 import { formatCompact, formatDate, formatGrowth, formatNumber, formatPercent } from "@/lib/format";
 import type { SortKey } from "@/lib/plans";
-
-const MAX_COMPARED = 4;
 
 const COLUMNS: { key: SortKey; label: string; render: (r: CreatorRow) => string }[] = [
   { key: "views30d", label: "Vues (30 j)", render: (r) => formatCompact(r.views30d) },
@@ -73,7 +72,7 @@ export function CreatorsTable({
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-night px-5 py-3 text-paper">
           <span className="text-sm text-paper/70">
             {selected.length === 0
-              ? "Coche 2 à 4 créateurs pour les comparer."
+              ? "Cochez 2 à 4 créateurs pour les comparer."
               : `${selected.length} créateur${selected.length > 1 ? "s" : ""} sélectionné${selected.length > 1 ? "s" : ""}`}
           </span>
           <Link
