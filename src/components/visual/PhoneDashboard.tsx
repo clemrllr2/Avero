@@ -7,6 +7,16 @@ import { Sparkline } from "@/components/visual/Sparkline";
 const VIEWS_SPARK = [22, 30, 26, 41, 38, 52, 61, 74];
 
 /** Écran de démonstration affiché dans le téléphone (hero, pages de connexion) : un tableau de bord créateur. */
+/**
+ * Publications récentes affichées dans le téléphone : vidéos Mixkit (licence gratuite, usage commercial, sans attribution),
+ * 5 s, 240×426, sans son, dans public/videos/phone. Sources : vlog = 34487, ringlight = 42316, pose = 42319.
+ */
+const PHONE_POSTS = [
+  { seed: "lea-1", views: 412_000, video: "phone/vlog" },
+  { seed: "lea-2", views: 1_240_000, video: "phone/ringlight" },
+  { seed: "lea-3", views: 286_000, video: "phone/pose" },
+];
+
 export function PhoneDashboard() {
   return (
     <div className="flex size-full flex-col gap-3 bg-paper px-3.5 pt-11 pb-4 text-[11px]" aria-hidden>
@@ -51,8 +61,14 @@ export function PhoneDashboard() {
       </div>
 
       <div className="grid grid-cols-3 gap-1.5">
-        {["lea-1", "lea-2", "lea-3"].map((seed, i) => (
-          <PostThumb key={seed} seed={seed} views={[412_000, 1_240_000, 286_000][i]} className="rounded-lg !shadow-none [&_.display]:text-[10px]" />
+        {PHONE_POSTS.map((post) => (
+          <PostThumb
+            key={post.seed}
+            seed={post.seed}
+            views={post.views}
+            video={post.video}
+            className="rounded-lg !shadow-none [&_.display]:text-[10px]"
+          />
         ))}
       </div>
     </div>
