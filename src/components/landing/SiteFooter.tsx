@@ -63,12 +63,6 @@ export function SiteFooter() {
           © AVERO <CurrentYear />
         </p>
       </div>
-      <p
-        aria-hidden
-        className="display text-gradient pointer-events-none -mb-[0.2em] text-center text-[clamp(3.5rem,17vw,16rem)] leading-[0.85] font-extrabold opacity-80 select-none"
-      >
-        AVERO
-      </p>
     </footer>
   );
 }
