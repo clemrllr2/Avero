@@ -1,8 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { RoleTabs } from "@/components/auth/RoleTabs";
 import { SignInForm } from "@/components/auth/SignInForm";
 import { parseRoleSlug } from "@/lib/roles";
+import { pageMetadata } from "@/lib/site";
+
+// Page utile aux membres seulement : pas d'intérêt à apparaître dans Google (les liens restent suivis).
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: "Se connecter",
+    description: "Connectez-vous à votre espace AVERO, créateur ou marque, pour retrouver vos statistiques Instagram et TikTok.",
+    path: "/connexion",
+  }),
+  robots: { index: false, follow: true },
+};
 
 export default function SignInPage({ searchParams }: PageProps<"/connexion">) {
   return (

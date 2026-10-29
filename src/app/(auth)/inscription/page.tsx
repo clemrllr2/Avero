@@ -1,8 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { RoleTabs } from "@/components/auth/RoleTabs";
 import { SignUpForm } from "@/components/auth/SignUpForm";
 import { parseRoleSlug, roleFromSlug } from "@/lib/roles";
+import { pageMetadata } from "@/lib/site";
+
+// Canonique sans ?role= : les variantes créateur et marque comptent comme une seule page pour Google.
+export const metadata: Metadata = pageMetadata({
+  title: "Créer un compte créateur ou marque",
+  description:
+    "Créez votre compte AVERO gratuitement. Créateurs : reliez Instagram et TikTok. Marques : trouvez des créateurs sur des statistiques vérifiées.",
+  path: "/inscription",
+});
 
 export default function SignUpPage({ searchParams }: PageProps<"/inscription">) {
   return (

@@ -52,7 +52,8 @@ export function SiteFooter() {
           <div className="grid gap-10 sm:grid-cols-3">
             {COLUMNS.map((column) => (
               <nav key={column.title} aria-label={column.title} className="flex flex-col gap-3">
-                <h2 className="text-sm text-paper/50">{column.title}</h2>
+                {/* Simple libellé : un titre (h2) ici brouillerait la structure des pages pour les moteurs. */}
+                <p className="text-sm text-paper/50">{column.title}</p>
                 {column.links.map((link) => (
                   <Link key={link.href} href={link.href} className="text-paper/80 hover:text-paper">
                     {link.label}

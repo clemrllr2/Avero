@@ -5,10 +5,14 @@ import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteNav } from "@/components/landing/SiteNav";
 import { Aurora } from "@/components/visual/Aurora";
 import { Icon, type IconName } from "@/components/visual/Icon";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Mentions légales — AVERO",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Mentions légales",
+  description:
+    "Mentions légales du site AVERO : éditeur, hébergement, données personnelles, cookies et propriété intellectuelle.",
+  path: "/mentions-legales",
+});
 
 const UPDATED_ON = "28 octobre 2026";
 

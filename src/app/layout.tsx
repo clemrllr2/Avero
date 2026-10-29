@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -8,9 +9,27 @@ const archivo = Archivo({
   axes: ["wdth"],
 });
 
+const DESCRIPTION =
+  "Créateurs : reliez Instagram et TikTok et prouvez votre influence avec des statistiques vérifiées. Marques : choisissez vos créateurs sur des chiffres réels.";
+
+/** Valeurs par défaut ; chaque page publique précise son titre, sa description et son adresse canonique. */
 export const metadata: Metadata = {
-  title: "AVERO",
-  description: "Les statistiques des créateurs, lues directement sur Instagram et TikTok.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "AVERO – Statistiques Instagram et TikTok vérifiées",
+    template: "%s | AVERO",
+  },
+  description: DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: SITE_NAME,
+    title: "AVERO – Statistiques Instagram et TikTok vérifiées",
+    description: DESCRIPTION,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 // Pose la classe "motion" avant le premier affichage si les animations sont autorisées (voir globals.css).

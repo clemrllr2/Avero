@@ -7,7 +7,7 @@ import { requireRole } from "@/lib/session";
 import { platformFromSlug } from "@/lib/sync/platforms";
 import { parseConsentForm } from "@/lib/sync/simulated";
 
-export const metadata: Metadata = { title: "Autorisation simulée · AVERO" };
+export const metadata: Metadata = { title: "Autorisation simulée", robots: { index: false, follow: false } };
 
 /** Écran d'autorisation du mode simulé (OAUTH2_MODE=simulated), à la place de celui d'Instagram ou TikTok. */
 export default function SimulatedConsentPage({ params, searchParams }: PageProps<"/oauth/simulation/[platform]">) {

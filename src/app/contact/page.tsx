@@ -4,11 +4,14 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteNav } from "@/components/landing/SiteNav";
 import { Aurora } from "@/components/visual/Aurora";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact — AVERO",
-  description: "Une question sur AVERO, votre compte ou les plans ? Écrivez-nous.",
-};
+export const metadata: Metadata = pageMetadata({
+  title: "Contact",
+  description:
+    "Une question sur AVERO, votre compte créateur ou marque, ou nos plans ? Écrivez-nous : nous répondons par e-mail, et la réponse est parfois déjà dans la FAQ.",
+  path: "/contact",
+});
 
 /** Ce qui se passe après l'envoi : une vraie suite d'étapes, d'où la numérotation. */
 const NEXT_STEPS = [
