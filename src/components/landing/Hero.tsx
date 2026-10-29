@@ -121,6 +121,7 @@ export function Hero() {
                   seed={frame.handle}
                   handle={frame.handle}
                   platform={frame.platform}
+                  video={frame.video}
                   className="ring-1 ring-white/20"
                   badge={
                     i === 2 && (

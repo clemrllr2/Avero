@@ -47,10 +47,15 @@ export const FAQ_ITEMS: { question: string; answer: string; icon: IconName }[] =
 ];
 
 /** Vignettes du hero, autour du téléphone. */
-export const HERO_FRAMES: { handle: string; platform: Platform; views: number }[] = [
-  { handle: "@hugo.cuisine", platform: "INSTAGRAM", views: 386_000 },
-  { handle: "@lea.martin", platform: "TIKTOK", views: 1_240_000 },
-  { handle: "@ines.danse", platform: "TIKTOK", views: 2_870_000 },
+/**
+ * Vignettes du hero : vidéos Mixkit (licence gratuite, usage commercial, sans attribution) recadrées en 9:16,
+ * 6 s, 360×640, sans son, dans public/videos/hero. Sources : cuisine = 40534, ugc = 50423, unboxing = 42122
+ * (https://mixkit.co/free-stock-video/…-<id>/).
+ */
+export const HERO_FRAMES: { handle: string; platform: Platform; views: number; video: string }[] = [
+  { handle: "@hugo.cuisine", platform: "INSTAGRAM", views: 386_000, video: "hero/cuisine" },
+  { handle: "@lea.martin", platform: "TIKTOK", views: 1_240_000, video: "hero/ugc" },
+  { handle: "@manon.mode", platform: "TIKTOK", views: 2_870_000, video: "hero/unboxing" },
 ];
 
 /** Bandeau de chiffres sous le hero : des faits sur le produit, pas des statistiques d'utilisation. */

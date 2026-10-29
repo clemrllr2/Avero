@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Icon } from "@/components/visual/Icon";
+import { ThumbVideo } from "@/components/visual/ThumbVideo";
 import { formatCompact } from "@/lib/format";
 import type { Platform } from "@/lib/types";
 import { seededPick, thumbColors } from "@/lib/visual";
@@ -45,6 +46,7 @@ function Scene({ variant }: { variant: number }) {
 
 /**
  * Vignette 9:16 qui imite une vidéo : dégradé et formes tirés de `seed`, pseudo en haut, vues en bas.
+ * `video` (ex. "hero/cuisine") ajoute une vraie vidéo par-dessus le dégradé.
  * `views` peut être remplacé par un élément animé (`viewsSlot`).
  */
 export function PostThumb({
@@ -54,9 +56,12 @@ export function PostThumb({
   platform,
   viewsSlot,
   badge,
+  video,
   className = "",
 }: {
   seed: string;
+  /** Nom de la vidéo dans public/videos, sans extension */
+  video?: string;
   views?: number;
   handle?: string;
   platform?: Platform;
@@ -73,6 +78,7 @@ export function PostThumb({
       <svg aria-hidden viewBox="0 0 90 160" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 -z-10 size-full">
         <Scene variant={seededPick(seed, 4)} />
       </svg>
+      {video && <ThumbVideo name={video} />}
       <div aria-hidden className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
       <div className="flex h-full flex-col justify-between p-2.5 sm:p-3">
         <div className="flex items-center justify-between gap-2">
