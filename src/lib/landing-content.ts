@@ -7,6 +7,7 @@ export const NAV_LINKS = [
   { href: "#marques", label: "Marques" },
   { href: "#plans", label: "Plans" },
   { href: "#faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export const FAQ_ITEMS: { question: string; answer: string; icon: IconName }[] = [

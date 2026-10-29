@@ -75,10 +75,13 @@ export function SiteNav({ anchorsBase = "" }: { anchorsBase?: "" | "/" }) {
     { dependencies: [open], scope: panelRef },
   );
 
-  // Sur la landing, les ancres défilent en douceur ; ailleurs (mentions légales) on revient sur la landing.
+  // Liens « #section » : sur la landing, défilement doux ; ailleurs (mentions légales, contact), retour sur la landing.
+  // Liens vers une autre page (« /contact ») : navigation normale.
+  const isAnchor = (href: string) => href.startsWith("#");
+  const hrefFor = (href: string) => (isAnchor(href) ? `${anchorsBase}${href}` : href);
   const onAnchor = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     setOpen(false);
-    if (anchorsBase) return;
+    if (anchorsBase || !isAnchor(href)) return;
     e.preventDefault();
     scrollTo(href, NAV_OFFSET);
   };
@@ -99,7 +102,7 @@ export function SiteNav({ anchorsBase = "" }: { anchorsBase?: "" | "/" }) {
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
-              href={`${anchorsBase}${link.href}`}
+              href={hrefFor(link.href)}
               onClick={(e) => onAnchor(e, link.href)}
               className="text-paper/70 transition-colors hover:text-paper"
             >
@@ -147,7 +150,7 @@ export function SiteNav({ anchorsBase = "" }: { anchorsBase?: "" | "/" }) {
               <a
                 key={link.href}
                 data-menu-link
-                href={`${anchorsBase}${link.href}`}
+                href={hrefFor(link.href)}
                 onClick={(e) => onAnchor(e, link.href)}
                 className="display text-4xl font-bold"
               >
