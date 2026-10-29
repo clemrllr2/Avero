@@ -16,7 +16,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "AVERO – Statistiques Instagram et TikTok vérifiées",
+    default: "Statistiques Instagram et TikTok vérifiées | AVERO",
     template: "%s | AVERO",
   },
   description: DESCRIPTION,
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: SITE_NAME,
-    title: "AVERO – Statistiques Instagram et TikTok vérifiées",
+    title: "Statistiques Instagram et TikTok vérifiées | AVERO",
     description: DESCRIPTION,
     url: "/",
   },

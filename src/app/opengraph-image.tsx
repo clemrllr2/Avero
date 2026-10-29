@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 // Image affichée quand un lien d'AVERO est partagé (LinkedIn, WhatsApp, X, Slack…). Générée au build.
-export const alt = "AVERO — Statistiques Instagram et TikTok vérifiées pour créateurs et marques";
+export const alt = "AVERO : statistiques Instagram et TikTok vérifiées pour créateurs et marques";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
