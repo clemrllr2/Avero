@@ -1,3 +1,4 @@
+import { viewsByWeek } from "@/lib/charts";
 import { computeCombinedKpis, computeNetworkKpis } from "@/lib/kpi";
 import type { CreatorKpis, CreatorSource, NetworkData, Platform } from "@/lib/types";
 
@@ -7,6 +8,8 @@ export interface FullCreatorRow extends CreatorKpis {
   avatarUrl: string | null;
   platforms: Platform[];
   lastSyncedAt: Date;
+  /** Vues par semaine de publication sur 8 semaines (graphiques : Premium, retiré sinon par stripForPlan) */
+  viewsTrend: number[];
 }
 
 export interface CreatorDashboard {
@@ -31,6 +34,7 @@ export function buildFullRow(source: CreatorSource, now: Date): FullCreatorRow {
     avatarUrl: source.networks.find((n) => n.avatarUrl)?.avatarUrl ?? null,
     platforms: source.networks.map((n) => n.platform),
     lastSyncedAt: oldestSync(source.networks) ?? now,
+    viewsTrend: viewsByWeek(source.networks.flatMap((n) => n.posts), now).map((w) => w.views),
     ...computeCombinedKpis(source.networks, now),
   };
 }

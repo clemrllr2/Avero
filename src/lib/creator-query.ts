@@ -6,7 +6,21 @@ export type CreatorRow = Pick<
   FullCreatorRow,
   "creatorId" | "displayName" | "avatarUrl" | "platforms" | "lastSyncedAt" | "views30d"
 > &
-  Partial<Omit<CreatorKpis, "views30d">>;
+  Partial<Omit<CreatorKpis, "views30d">> &
+  Partial<Pick<FullCreatorRow, "viewsTrend">>;
+
+/** Affichage de la liste des marques : cartes (par défaut) ou tableau. */
+export type ListView = "cartes" | "tableau";
+
+/** Tranches d'abonnés proposées en pastilles (bornes incluses). */
+export const FOLLOWER_RANGES = [
+  { key: "lt10k", label: "Moins de 10 k", max: 9_999 },
+  { key: "10k-100k", label: "10 k à 100 k", min: 10_000, max: 99_999 },
+  { key: "100k-1m", label: "100 k à 1 M", min: 100_000, max: 999_999 },
+  { key: "gt1m", label: "Plus de 1 M", min: 1_000_000 },
+] as const satisfies readonly { key: string; label: string; min?: number; max?: number }[];
+
+export type FollowerRangeKey = (typeof FOLLOWER_RANGES)[number]["key"];
 
 export interface CreatorListQuery {
   sort: SortKey;
@@ -53,7 +67,37 @@ export function stripForPlan(row: FullCreatorRow, plan: Plan): CreatorRow {
   for (const kpi of GATED_KPIS) {
     if (!canAccess(plan, kpi satisfies Feature)) delete stripped[kpi];
   }
+  if (!canAccess(plan, "charts")) delete stripped.viewsTrend;
   return stripped;
+}
+
+/** Lit ?vue= : « tableau » si demandé, « cartes » sinon. */
+export function parseView(params: SearchParams): ListView {
+  return first(params.vue) === "tableau" ? "tableau" : "cartes";
+}
+
+/** Tranche d'abonnés correspondant aux filtres : « all » sans borne, « custom » si les bornes ne sont pas une tranche proposée. */
+export function followerRangeOf(query: CreatorListQuery): FollowerRangeKey | "all" | "custom" {
+  if (query.minFollowers === undefined && query.maxFollowers === undefined) return "all";
+  const range = FOLLOWER_RANGES.find(
+    (r) => ("min" in r ? r.min : undefined) === query.minFollowers && ("max" in r ? r.max : undefined) === query.maxFollowers,
+  );
+  return range?.key ?? "custom";
+}
+
+type ListState = CreatorListQuery & { view?: ListView };
+
+/** Adresse de la liste avec l'état courant modifié par `patch` (une valeur undefined retire le paramètre). */
+export function listHref(state: ListState, patch: Partial<ListState>): string {
+  const next = { ...state, ...patch };
+  const params = new URLSearchParams();
+  params.set("sort", next.sort);
+  params.set("order", next.order);
+  if (next.platform) params.set("platform", next.platform);
+  if (next.minFollowers !== undefined) params.set("minFollowers", String(next.minFollowers));
+  if (next.maxFollowers !== undefined) params.set("maxFollowers", String(next.maxFollowers));
+  if (next.view === "tableau") params.set("vue", "tableau");
+  return `/marque?${params}`;
 }
 
 function matchesFilters(row: FullCreatorRow, query: CreatorListQuery): boolean {

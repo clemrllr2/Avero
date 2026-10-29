@@ -1,15 +1,23 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { CreatorsTable } from "@/components/brand/CreatorsTable";
-import { FiltersBar } from "@/components/brand/FiltersBar";
+import { BrandOverview } from "@/components/brand/BrandOverview";
+import { FilterPills } from "@/components/brand/FilterPills";
 import { SpaceLoading } from "@/components/SpaceLayout";
 import { buttonClass } from "@/components/ui/Button";
 import { UpgradeNotice } from "@/components/ui/UpgradeNotice";
 import { Icon } from "@/components/visual/Icon";
 import { PageHero } from "@/components/visual/PageHero";
-import { effectiveQuery, parseListQuery } from "@/lib/creator-query";
+import { listOverview } from "@/lib/brand-overview";
+import { effectiveQuery, listHref, parseListQuery, parseView, type ListView } from "@/lib/creator-query";
 import { listCreatorsForBrand } from "@/lib/data/creators";
 import { PLAN_LABELS, allowedSortKeys, canAccess } from "@/lib/plans";
 import { requireRole } from "@/lib/session";
+
+const VIEWS: { value: ListView; label: string; icon: "grid" | "chart" }[] = [
+  { value: "cartes", label: "Cartes", icon: "grid" },
+  { value: "tableau", label: "Tableau", icon: "chart" },
+];
 
 export default function BrandCreatorsPage({ searchParams }: PageProps<"/marque">) {
   return (
@@ -37,8 +45,10 @@ async function CreatorsList({ searchParams }: Pick<PageProps<"/marque">, "search
   const params = await searchParams;
   // Requête réellement appliquée (une adresse bricolée par une marque Free est ramenée à son plan).
   const query = effectiveQuery(plan, parseListQuery(params));
+  const view = parseView(params);
   const rows = await listCreatorsForBrand(plan, query);
   const premium = canAccess(plan, "compare");
+  const filters = canAccess(plan, "filters");
 
   return (
     <>
@@ -50,18 +60,30 @@ async function CreatorsList({ searchParams }: Pick<PageProps<"/marque">, "search
           Vous êtes maintenant sur le plan {PLAN_LABELS[plan].name}.
         </p>
       )}
-      {canAccess(plan, "filters") ? (
-        <FiltersBar query={query} />
-      ) : (
+      <FilterPills query={query} view={view} allowed={filters} />
+      {!filters && (
         <UpgradeNotice requiredPlan="BASIC">
           Avec Basic : abonnés, engagement, évolution, et filtres par réseau et nombre d&apos;abonnés.
         </UpgradeNotice>
       )}
+      <BrandOverview overview={listOverview(rows)} engagementAllowed={canAccess(plan, "engagementRate")} />
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="flex items-center gap-2 text-sm text-muted">
-          <span className="display text-xl font-bold text-ink">{rows.length}</span>
-          créateur{rows.length > 1 ? "s" : ""}
-        </p>
+        <nav aria-label="Affichage" className="flex gap-1 rounded-full border border-line bg-surface p-1">
+          {VIEWS.map((v) => (
+            <Link
+              key={v.value}
+              href={listHref({ ...query, view }, { view: v.value })}
+              scroll={false}
+              aria-current={view === v.value ? "page" : undefined}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                view === v.value ? "bg-night text-paper" : "text-muted hover:text-ink"
+              }`}
+            >
+              <Icon name={v.icon} className="size-4" />
+              {v.label}
+            </Link>
+          ))}
+        </nav>
         {canAccess(plan, "exportCsv") && (
           <a href="/marque/export" download className={buttonClass("secondary", "px-4 py-2.5 text-sm")}>
             <Icon name="arrow-down" className="size-4" />
@@ -69,7 +91,7 @@ async function CreatorsList({ searchParams }: Pick<PageProps<"/marque">, "search
           </a>
         )}
       </div>
-      <CreatorsTable rows={rows} query={query} sortable={allowedSortKeys(plan)} premium={premium} />
+      <CreatorsTable rows={rows} query={query} sortable={allowedSortKeys(plan)} premium={premium} view={view} />
       {!premium && (
         <UpgradeNotice requiredPlan="PREMIUM">
           Avec Premium : fiche détaillée de chaque créateur, graphiques, audience, comparaison et export CSV.

@@ -1,6 +1,14 @@
 import { describe, expect, test } from "vitest";
 import type { FullCreatorRow } from "@/lib/aggregate";
-import { effectiveQuery, parseListQuery, queryCreatorRows, stripForPlan } from "@/lib/creator-query";
+import {
+  effectiveQuery,
+  followerRangeOf,
+  listHref,
+  parseListQuery,
+  parseView,
+  queryCreatorRows,
+  stripForPlan,
+} from "@/lib/creator-query";
 
 const syncedAt = new Date("2026-10-26T10:00:00Z");
 
@@ -20,6 +28,7 @@ function row(
     engagementRate: 0.05,
     posts30d: 10,
     followerGrowth30d: 10,
+    viewsTrend: [100, 200, 300],
     ...overrides,
   };
 }
@@ -41,8 +50,16 @@ describe("stripForPlan", () => {
     }
   });
 
-  test("BASIC : tous les KPI sont présents", () => {
-    expect(stripForPlan(rows[0], "BASIC")).toEqual(rows[0]);
+  test("BASIC : tous les KPI sont présents, mais pas la courbe des vues (graphiques = Premium)", () => {
+    const { viewsTrend, ...kpis } = rows[0];
+    expect(viewsTrend).toBeDefined();
+    expect(stripForPlan(rows[0], "BASIC")).toEqual(kpis);
+  });
+
+  test("courbe des vues : retirée en FREE et BASIC, gardée en PREMIUM", () => {
+    expect(stripForPlan(rows[0], "FREE")).not.toHaveProperty("viewsTrend");
+    expect(stripForPlan(rows[0], "BASIC")).not.toHaveProperty("viewsTrend");
+    expect(stripForPlan(rows[0], "PREMIUM").viewsTrend).toEqual([100, 200, 300]);
   });
 });
 
@@ -123,5 +140,42 @@ describe("effectiveQuery", () => {
   test("BASIC : requête inchangée", () => {
     const query = { sort: "followers", order: "asc", platform: "TIKTOK", maxFollowers: 5000 } as const;
     expect(effectiveQuery("BASIC", query)).toEqual(query);
+  });
+});
+
+describe("listHref", () => {
+  test("garde le tri, les filtres et la vue ; « cartes » (vue par défaut) n'apparaît pas", () => {
+    expect(listHref({ sort: "views30d", order: "desc" }, {})).toBe("/marque?sort=views30d&order=desc");
+    expect(listHref({ sort: "followers", order: "asc", platform: "TIKTOK", minFollowers: 1000, view: "tableau" }, {})).toBe(
+      "/marque?sort=followers&order=asc&platform=TIKTOK&minFollowers=1000&vue=tableau",
+    );
+  });
+
+  test("une valeur undefined dans la modification retire le paramètre", () => {
+    const state = { sort: "views30d", order: "desc", platform: "INSTAGRAM", minFollowers: 10, maxFollowers: 99 } as const;
+    expect(listHref(state, { platform: undefined, minFollowers: undefined, maxFollowers: undefined })).toBe(
+      "/marque?sort=views30d&order=desc",
+    );
+    expect(listHref(state, { view: "tableau" })).toBe(
+      "/marque?sort=views30d&order=desc&platform=INSTAGRAM&minFollowers=10&maxFollowers=99&vue=tableau",
+    );
+  });
+});
+
+describe("followerRangeOf", () => {
+  test("reconnaît les tranches prédéfinies, « all » sans borne, « custom » sinon", () => {
+    expect(followerRangeOf({ sort: "views30d", order: "desc" })).toBe("all");
+    expect(followerRangeOf({ sort: "views30d", order: "desc", maxFollowers: 9_999 })).toBe("lt10k");
+    expect(followerRangeOf({ sort: "views30d", order: "desc", minFollowers: 10_000, maxFollowers: 99_999 })).toBe("10k-100k");
+    expect(followerRangeOf({ sort: "views30d", order: "desc", minFollowers: 1_000_000 })).toBe("gt1m");
+    expect(followerRangeOf({ sort: "views30d", order: "desc", minFollowers: 5 })).toBe("custom");
+  });
+});
+
+describe("parseView", () => {
+  test("« tableau » si demandé, « cartes » sinon", () => {
+    expect(parseView({ vue: "tableau" })).toBe("tableau");
+    expect(parseView({ vue: "n'importe quoi" })).toBe("cartes");
+    expect(parseView({})).toBe("cartes");
   });
 });
