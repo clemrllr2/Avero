@@ -74,11 +74,12 @@ export function Hero() {
       <div className="mx-auto grid min-h-[100svh] max-w-7xl items-center gap-16 px-4 pt-32 pb-20 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:pt-36">
         <div className="flex flex-col gap-8">
           <SplitHeadline className="display text-[36px] leading-[1.03] font-extrabold sm:text-[50px] lg:text-[50px] xl:text-[60px]">
-            Les statistiques des créateurs, lues directement sur Instagram et TikTok.
+            Prouvez votre influence avec des chiffres que personne ne peut retoucher.
           </SplitHeadline>
           <p data-motion data-hero-copy className="max-w-[46ch] text-lg text-paper/70 sm:text-xl">
-            Les créateurs relient leurs comptes en un clic. Les marques comparent des chiffres qui
-            viennent des réseaux, pas de captures d&apos;écran.
+            Créateurs, reliez Instagram et TikTok en un clic et montrez vos vraies performances.
+            Marques, choisissez vos partenaires sur des statistiques vérifiées, pas sur des captures
+            d&apos;écran.
           </p>
           <div data-motion data-hero-copy className="flex flex-col gap-5">
             <div className="flex flex-wrap gap-3">
