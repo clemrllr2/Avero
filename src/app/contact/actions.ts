@@ -1,7 +1,15 @@
 "use server";
 
+import { headers } from "next/headers";
 import { isSpam, validateContact } from "@/lib/contact";
 import { saveContactMessage } from "@/lib/data/contact";
+import { TURNSTILE_FIELD, turnstileConfig, verifyTurnstile } from "@/lib/turnstile";
+
+/** Adresse IP du visiteur (transmise à Cloudflare pour une vérification plus fiable). */
+async function visitorIp(): Promise<string | undefined> {
+  const h = await headers();
+  return h.get("cf-connecting-ip") ?? h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? undefined;
+}
 
 export interface ContactState {
   sent?: boolean;
@@ -22,6 +30,17 @@ export async function contactAction(_prev: ContactState, formData: FormData): Pr
 
   const result = validateContact(input);
   if (!result.ok) return { error: result.error, values };
+
+  // Vérification anti-robot Cloudflare, après les champs : un jeton n'est valable qu'une fois.
+  const turnstile = turnstileConfig(process.env);
+  if (turnstile.status === "misconfigured") {
+    console.error("Turnstile : il faut les deux clés NEXT_PUBLIC_TURNSTILE_SITE_KEY et TURNSTILE_SECRET_KEY.");
+    return { error: "Le formulaire est momentanément indisponible. Réessayez plus tard.", values };
+  }
+  if (turnstile.status === "enabled") {
+    const human = await verifyTurnstile(input[TURNSTILE_FIELD], { secret: turnstile.secret, remoteIp: await visitorIp() });
+    if (!human) return { error: "La vérification anti-robot n'a pas abouti. Réessayez.", values };
+  }
 
   try {
     await saveContactMessage(result.data);

@@ -4,9 +4,13 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import { contactAction, type ContactState } from "@/app/contact/actions";
 import { AuthField, FormError } from "@/components/auth/AuthField";
+import { TurnstileWidget } from "@/components/contact/TurnstileWidget";
 import { Button, buttonClass } from "@/components/ui/Button";
 import { Icon, type IconName } from "@/components/visual/Icon";
 import { CONTACT_MESSAGE_MAX, CONTACT_MESSAGE_MIN, CONTACT_TOPICS, faqForTopic, type ContactTopic } from "@/lib/contact";
+
+/** Clé publique Cloudflare Turnstile ; sans elle, pas de case de vérification (développement). */
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 /** Ce que chaque profil peut demander : aide à choisir la bonne case. */
 const TOPIC_DETAILS: Record<ContactTopic, { icon: IconName; hint: string; tone: string }> = {
@@ -23,6 +27,8 @@ export function ContactForm() {
   const [state, action, pending] = useActionState<ContactState, FormData>(contactAction, {});
   const [topic, setTopic] = useState<ContactTopic | undefined>(state.values?.topic as ContactTopic | undefined);
   const [length, setLength] = useState(state.values?.message.length ?? 0);
+  const [verified, setVerified] = useState(false);
+  const waitingForCheck = Boolean(TURNSTILE_SITE_KEY) && !verified;
   const answers = faqForTopic(topic);
 
   if (state.sent) {
@@ -141,10 +147,17 @@ export function ContactForm() {
         </label>
       </div>
 
+      {TURNSTILE_SITE_KEY && <TurnstileWidget siteKey={TURNSTILE_SITE_KEY} resetKey={state} onVerified={setVerified} />}
+
       <FormError message={state.error} />
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <Button type="submit" disabled={pending} className="px-6 py-3.5">
+        <Button
+          type="submit"
+          disabled={pending || waitingForCheck}
+          title={waitingForCheck ? "Patientez pendant la vérification anti-robot" : undefined}
+          className="px-6 py-3.5"
+        >
           {pending ? "Envoi…" : "Envoyer le message"}
         </Button>
         <p className="text-xs text-muted sm:max-w-[30ch] sm:text-right">
