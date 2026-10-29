@@ -7,10 +7,10 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
     title: "AVERO",
     links: [
-      { href: "/#createurs", label: "Créateurs" },
-      { href: "/#marques", label: "Marques" },
+      { href: "/createurs", label: "Créateurs" },
+      { href: "/marques", label: "Marques" },
       { href: "/#plans", label: "Plans" },
-      { href: "/#faq", label: "FAQ" },
+      { href: "/a-propos", label: "À propos" },
     ],
   },
   {
@@ -24,6 +24,9 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
     title: "Informations",
     links: [
+      { href: "/guides", label: "Guides" },
+      { href: "/outils/calcul-taux-engagement", label: "Calcul du taux d'engagement" },
+      { href: "/#faq", label: "FAQ" },
       { href: "/contact", label: "Contact" },
       { href: "/mentions-legales", label: "Mentions légales" },
     ],

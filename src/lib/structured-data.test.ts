@@ -1,7 +1,8 @@
 import { expect, test } from "vitest";
 import { FAQ_ITEMS } from "@/lib/landing-content";
 import { PLAN_MONTHLY_PRICE_EUR } from "@/lib/plans";
-import { homeJsonLd, serializeJsonLd } from "@/lib/structured-data";
+import { GUIDES } from "@/content/guides";
+import { breadcrumbJsonLd, guideJsonLd, homeJsonLd, serializeJsonLd } from "@/lib/structured-data";
 
 const graph = homeJsonLd("https://avero.test")["@graph"];
 const byType = (type: string) => graph.find((node) => node["@type"] === type);
@@ -28,4 +29,28 @@ test("la FAQ balisée reprend exactement les questions affichées", () => {
 
 test("sérialisation sûre : « < » neutralisé pour ne jamais fermer la balise script", () => {
   expect(serializeJsonLd({ text: "</script><script>alert(1)</script>" })).not.toContain("<");
+});
+
+test("fil d'Ariane : positions et adresses absolues", () => {
+  expect(breadcrumbJsonLd("https://avero.test", [{ name: "Accueil", path: "/" }, { name: "Guides", path: "/guides" }])).toEqual({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: "https://avero.test/" },
+      { "@type": "ListItem", position: 2, name: "Guides", item: "https://avero.test/guides" },
+    ],
+  });
+});
+
+test("guide : article daté, publié par AVERO, à son adresse", () => {
+  const guide = GUIDES[0];
+  expect(guideJsonLd("https://avero.test", guide)).toMatchObject({
+    "@type": "Article",
+    headline: guide.heading,
+    description: guide.description,
+    inLanguage: "fr-FR",
+    dateModified: guide.updatedOn,
+    author: { "@type": "Organization", name: "AVERO" },
+    mainEntityOfPage: `https://avero.test/guides/${guide.slug}`,
+  });
 });

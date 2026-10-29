@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
 import { MOTION_OK, gsap, useGSAP } from "@/components/motion/gsap";
 import { ButtonLink } from "@/components/ui/Button";
@@ -83,10 +84,13 @@ export function CreatorsSection() {
               </li>
             ))}
           </ul>
-          <div data-motion data-copy>
+          <div data-motion data-copy className="flex flex-wrap items-center gap-x-6 gap-y-3">
             <ButtonLink href="/inscription?role=createur" className="px-6 py-3.5">
               Créer mon compte créateur
             </ButtonLink>
+            <Link href="/createurs" className="font-semibold text-cobalt underline-offset-4 hover:underline">
+              AVERO pour les créateurs
+            </Link>
           </div>
         </div>
 

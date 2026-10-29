@@ -1,3 +1,4 @@
+import type { Guide } from "@/content/guides";
 import { FAQ_ITEMS } from "@/lib/landing-content";
 import { PLAN_LABELS, PLAN_MONTHLY_PRICE_EUR, PLANS } from "@/lib/plans";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
@@ -46,6 +47,36 @@ export function homeJsonLd(siteUrl: string): { "@context": string; "@graph": Jso
         })),
       },
     ],
+  };
+}
+
+/** Fil d'Ariane (Accueil › Guides › …) : aide Google à comprendre la place de la page dans le site. */
+export function breadcrumbJsonLd(siteUrl: string, items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: `${siteUrl}${item.path}`,
+    })),
+  };
+}
+
+/** Article d'un guide : titre, description, date de mise à jour, publié par AVERO. */
+export function guideJsonLd(siteUrl: string, guide: Guide) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: guide.heading,
+    description: guide.description,
+    inLanguage: "fr-FR",
+    datePublished: guide.updatedOn,
+    dateModified: guide.updatedOn,
+    author: { "@type": "Organization", name: SITE_NAME, url: `${siteUrl}/` },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: `${siteUrl}/` },
+    mainEntityOfPage: `${siteUrl}/guides/${guide.slug}`,
   };
 }
 

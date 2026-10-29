@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef } from "react";
 import { MOTION_OK, gsap, useGSAP } from "@/components/motion/gsap";
 import { ButtonLink } from "@/components/ui/Button";
@@ -82,10 +83,13 @@ export function BrandsSection() {
               </li>
             ))}
           </ul>
-          <div data-motion data-copy>
+          <div data-motion data-copy className="flex flex-wrap items-center gap-x-6 gap-y-3">
             <ButtonLink href="/inscription?role=marque" className="px-6 py-3.5">
               Créer mon compte marque
             </ButtonLink>
+            <Link href="/marques" className="font-semibold text-paper underline-offset-4 hover:underline">
+              AVERO pour les marques
+            </Link>
           </div>
         </div>
 
