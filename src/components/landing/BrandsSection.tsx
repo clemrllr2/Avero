@@ -41,8 +41,10 @@ export function BrandsSection() {
           { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.1, scrollTrigger: { trigger: ref.current, start: "top 70%", once: true } },
         );
         gsap.set("[data-list]", { visibility: "visible" });
+        // Le tri se termine quand la liste est centrée à l'écran (son centre à 55 % de la hauteur),
+        // jamais pendant qu'elle sort par le haut : on voit toujours le classement final.
         const tl = gsap.timeline({
-          scrollTrigger: { trigger: "[data-list]", start: "top 80%", end: "bottom 35%", scrub: 0.8 },
+          scrollTrigger: { trigger: "[data-list]", start: "top 85%", end: "center 55%", scrub: 0.8 },
         });
         tl.fromTo(
           rows,
