@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRef } from "react";
 import { CountUp } from "@/components/motion/CountUp";
 import { MOTION_OK, gsap, useGSAP } from "@/components/motion/gsap";
-import { SplitHeadline } from "@/components/motion/SplitHeadline";
 import { ButtonLink } from "@/components/ui/Button";
 import { Aurora } from "@/components/visual/Aurora";
 import { Icon } from "@/components/visual/Icon";
@@ -35,9 +34,9 @@ export function Hero() {
       mm.add(MOTION_OK, () => {
         const frames = gsap.utils.toArray<HTMLElement>("[data-frame]");
         const intro = gsap.timeline({ delay: 0.35 });
+        // Le texte du hero s'anime en CSS (.hero-reveal / .hero-rise) pour s'afficher sans attendre ce script.
         intro
-          .fromTo("[data-hero-copy]", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.1 })
-          .fromTo("[data-phone]", { autoAlpha: 0, y: 140 }, { autoAlpha: 1, y: 0, duration: 1.4, ease: "expo.out" }, "<0.05")
+          .fromTo("[data-phone]", { autoAlpha: 0, y: 140 }, { autoAlpha: 1, y: 0, duration: 1.4, ease: "expo.out" })
           .fromTo(
             frames,
             { autoAlpha: 0, y: 90, scale: 0.85 },
@@ -73,15 +72,15 @@ export function Hero() {
       <div aria-hidden className="dot-grid absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_at_70%_40%,black,transparent_70%)]" />
       <div className="mx-auto grid min-h-[100svh] max-w-7xl items-center gap-16 px-4 pt-32 pb-20 sm:px-8 lg:grid-cols-[1.2fr_1fr] lg:pt-36">
         <div className="flex flex-col gap-8">
-          <SplitHeadline className="display text-[36px] leading-[1.03] font-extrabold sm:text-[50px] lg:text-[50px] xl:text-[60px]">
+          <h1 className="hero-reveal display text-[36px] leading-[1.03] font-extrabold sm:text-[50px] lg:text-[50px] xl:text-[60px]">
             Prouvez votre influence avec des chiffres que personne ne peut retoucher.
-          </SplitHeadline>
-          <p data-motion data-hero-copy className="max-w-[46ch] text-lg text-paper/70 sm:text-xl">
+          </h1>
+          <p className="hero-rise max-w-[46ch] text-lg text-paper/70 [animation-delay:120ms] sm:text-xl">
             Créateurs, reliez Instagram et TikTok en un clic et montrez vos vraies performances.
             Marques, choisissez vos partenaires sur des statistiques vérifiées, pas sur des captures
             d&apos;écran.
           </p>
-          <div data-motion data-hero-copy className="flex flex-col gap-5">
+          <div className="hero-rise flex flex-col gap-5 [animation-delay:240ms]">
             <div className="flex flex-wrap gap-3">
               <ButtonLink href="/inscription?role=createur" className="px-6 py-3.5 shadow-[0_12px_40px_-8px_rgba(59,70,241,0.8)]">
                 Je suis créateur

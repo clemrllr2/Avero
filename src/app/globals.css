@@ -208,6 +208,38 @@ html.lenis body {
   overflow: clip;
 }
 
+/*
+ * Hero : entrée du texte en CSS, sans attendre JavaScript. Le titre et le sous-titre sont ce que Google
+ * mesure comme « plus grand élément affiché » (LCP) : ils doivent être visibles dès le premier affichage.
+ * Seul le mouvement est animé (le masque du titre laisse toujours voir le haut des lignes).
+ */
+@keyframes hero-reveal {
+  from {
+    clip-path: inset(0 0 45% 0);
+    transform: translateY(0.3em);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+}
+@keyframes hero-rise {
+  from {
+    opacity: 0.35;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-reveal {
+  animation: hero-reveal 1.1s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+.hero-rise {
+  animation: hero-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
 @keyframes aurora-drift {
   0% {
     transform: translate3d(0, 0, 0) scale(1);
