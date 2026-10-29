@@ -24,8 +24,8 @@ export function PlanCards() {
             Trois plans pour les marques.
           </h2>
           <p className="text-lg text-muted">
-            Commencez gratuitement avec le classement par vues. Basic et Premium sont offerts
-            pendant la phase de lancement.
+            Commencez gratuitement avec le classement par vues, puis passez à Basic ou Premium
+            quand vous en avez besoin. Vous pouvez changer de plan à tout moment.
           </p>
         </Reveal>
 

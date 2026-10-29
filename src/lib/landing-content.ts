@@ -1,5 +1,6 @@
 import type { IconName } from "@/components/visual/Icon";
 import type { Platform } from "@/lib/types";
+import { PLAN_MONTHLY_PRICE_EUR } from "@/lib/plans";
 
 export const NAV_LINKS = [
   { href: "#createurs", label: "Créateurs" },
@@ -30,7 +31,7 @@ export const FAQ_ITEMS: { question: string; answer: string; icon: IconName }[] =
     icon: "bolt",
     question: "Combien coûte AVERO ?",
     answer:
-      "Rien pour les créateurs. Pour les marques, le plan Free est gratuit ; Basic et Premium sont gratuits pendant la phase de lancement.",
+      `Rien pour les créateurs. Pour les marques, le plan Free est gratuit ; Basic coûte ${PLAN_MONTHLY_PRICE_EUR.BASIC}\u00a0€ par mois et Premium ${PLAN_MONTHLY_PRICE_EUR.PREMIUM}\u00a0€ par mois, hors taxes.`,
   },
   {
     icon: "shield",

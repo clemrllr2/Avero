@@ -1,7 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { Aurora } from "@/components/visual/Aurora";
 import { Icon, type IconName } from "@/components/visual/Icon";
-import { PLAN_LABELS, planCardFeatures } from "@/lib/plans";
+import { PLAN_LABELS, PLAN_MONTHLY_PRICE_EUR, planCardFeatures } from "@/lib/plans";
 import type { Plan } from "@/lib/types";
 
 const PLAN_ICON: Record<Plan, IconName> = { FREE: "eye", BASIC: "chart", PREMIUM: "sparkle" };
@@ -71,10 +71,10 @@ export function PlanCardView({
 
       <p className="flex flex-col gap-1">
         <span className={`display text-[44px] leading-none font-extrabold ${featured ? "text-gradient" : ""}`}>
-          {plan === "FREE" ? "Gratuit" : "0 €"}
+          {plan === "FREE" ? "Gratuit" : `${PLAN_MONTHLY_PRICE_EUR[plan]}\u00a0€`}
         </span>
         <span className={`text-sm ${featured ? "text-paper/60" : "text-muted"}`}>
-          {plan === "FREE" ? "Pour toujours" : "Gratuit pendant le lancement"}
+          {plan === "FREE" ? "Pour toujours" : "par mois, hors taxes"}
         </span>
       </p>
 

@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   PLAN_COMPARISON,
   PLAN_FEATURES,
+  PLAN_MONTHLY_PRICE_EUR,
   allowedSortKeys,
   canAccess,
   isPlan,
@@ -95,4 +96,8 @@ describe("planCardFeatures", () => {
   test("PREMIUM : toutes les lignes du comparatif, dans l'ordre", () => {
     expect(planCardFeatures("PREMIUM")).toEqual(PLAN_COMPARISON.map((row) => row.label));
   });
+});
+
+test("prix mensuels HT : Free gratuit, Basic 29 €, Premium 99 €", () => {
+  expect(PLAN_MONTHLY_PRICE_EUR).toEqual({ FREE: 0, BASIC: 29, PREMIUM: 99 });
 });

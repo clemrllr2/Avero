@@ -21,8 +21,7 @@ export default function PlansPage() {
         title="Plans"
         subtitle={
           <p>
-            Basic et Premium sont gratuits pendant la phase de lancement. Vous pouvez changer de plan à
-            tout moment.
+            Prix mensuels hors taxes. Vous pouvez changer de plan à tout moment.
           </p>
         }
       />

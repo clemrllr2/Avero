@@ -31,6 +31,9 @@ export const PLAN_FEATURES: Record<Plan, readonly Feature[]> = {
   PREMIUM: [...BASIC_FEATURES, "creatorDetail", "charts", "audience", "compare", "exportCsv"],
 };
 
+/** Prix mensuels hors taxes, en euros (affichés sur les cartes ; le paiement n'est pas encore branché). */
+export const PLAN_MONTHLY_PRICE_EUR: Record<Plan, number> = { FREE: 0, BASIC: 29, PREMIUM: 99 };
+
 export const PLAN_LABELS: Record<Plan, { name: string; description: string }> = {
   FREE: {
     name: "Free",
