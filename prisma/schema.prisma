@@ -188,3 +188,23 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+enum ContactTopic {
+  CREATOR
+  BRAND
+  OTHER
+}
+
+/// Message envoyé depuis le formulaire de la page /contact (lu dans Supabase → Table Editor).
+model ContactMessage {
+  id        String       @id @default(cuid())
+  createdAt DateTime     @default(now())
+  name      String
+  email     String
+  topic     ContactTopic
+  message   String
+  /// À cocher dans Supabase une fois la demande traitée
+  handled   Boolean      @default(false)
+
+  @@index([createdAt])
+}

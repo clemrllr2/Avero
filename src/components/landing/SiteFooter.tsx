@@ -23,7 +23,10 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   },
   {
     title: "Informations",
-    links: [{ href: "/mentions-legales", label: "Mentions légales" }],
+    links: [
+      { href: "/contact", label: "Contact" },
+      { href: "/mentions-legales", label: "Mentions légales" },
+    ],
   },
 ];
 

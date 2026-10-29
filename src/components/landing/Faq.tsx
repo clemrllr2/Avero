@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
 import { Icon } from "@/components/visual/Icon";
 import { FAQ_ITEMS } from "@/lib/landing-content";
@@ -17,6 +18,12 @@ export function Faq() {
           <span aria-hidden className="grid size-20 place-items-center rounded-[28px] bg-gradient-to-br from-cobalt via-violet to-instagram text-white shadow-[0_24px_50px_-20px_rgba(124,92,255,0.8)]">
             <Icon name="question" className="size-9" />
           </span>
+          <p className="text-muted">
+            Une autre question ?{" "}
+            <Link href="/contact" className="font-semibold text-cobalt underline-offset-4 hover:underline">
+              Écrivez-nous
+            </Link>
+          </p>
         </Reveal>
         <Reveal stagger={0.06} className="flex flex-col gap-3">
           {FAQ_ITEMS.map((item) => (
