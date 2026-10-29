@@ -5,6 +5,8 @@ import { saveContactMessage } from "@/lib/data/contact";
 
 export interface ContactState {
   sent?: boolean;
+  /** Adresse à laquelle on répondra, rappelée dans la confirmation */
+  replyTo?: string;
   error?: string;
   /** Saisie réaffichée après une erreur (React vide le formulaire). */
   values?: { name: string; email: string; topic: string; message: string };
@@ -27,5 +29,5 @@ export async function contactAction(_prev: ContactState, formData: FormData): Pr
     console.error("Message de contact non enregistré :", error instanceof Error ? error.message : error);
     return { error: "L'envoi a échoué. Réessayez dans un instant.", values };
   }
-  return { sent: true };
+  return { sent: true, replyTo: result.data.email };
 }

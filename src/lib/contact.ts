@@ -1,3 +1,4 @@
+import { FAQ_ITEMS } from "@/lib/landing-content";
 import type { Validation } from "@/lib/validation";
 
 export type ContactTopic = "CREATOR" | "BRAND" | "OTHER";
@@ -49,4 +50,10 @@ export function validateContact(input: Record<string, unknown>): Validation<Cont
 /** Champ invisible pour les humains : s'il est rempli, c'est un robot (le message est ignoré sans le dire). */
 export function isSpam(input: Record<string, unknown>): boolean {
   return text(input.website) !== "";
+}
+
+/** Questions de la FAQ proposées en réponse rapide une fois le profil choisi (aucune pour « Autre »). */
+export function faqForTopic(topic: ContactTopic | undefined) {
+  if (topic !== "CREATOR" && topic !== "BRAND") return [];
+  return FAQ_ITEMS.filter((item) => item.audience === topic);
 }

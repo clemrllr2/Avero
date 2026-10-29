@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { CONTACT_MESSAGE_MAX, CONTACT_MESSAGE_MIN, isSpam, validateContact } from "@/lib/contact";
+import { CONTACT_MESSAGE_MAX, CONTACT_MESSAGE_MIN, faqForTopic, isSpam, validateContact } from "@/lib/contact";
 
 const valid = { name: "Léa Martin", email: "lea@exemple.fr", topic: "BRAND", message: "Bonjour, une question sur le plan Premium." };
 
@@ -41,4 +41,18 @@ test("isSpam : le champ caché anti-robots rempli → spam", () => {
   expect(isSpam({ website: "http://spam.test" })).toBe(true);
   expect(isSpam({ website: "" })).toBe(false);
   expect(isSpam({})).toBe(false);
+});
+
+test("faqForTopic : réponses de la FAQ utiles selon le profil choisi", () => {
+  expect(faqForTopic("CREATOR").map((i) => i.question)).toEqual([
+    "Faut-il un compte Instagram professionnel ?",
+    "Que voient les marques de mes données ?",
+    "Puis-je déconnecter un réseau ?",
+  ]);
+  expect(faqForTopic("BRAND").map((i) => i.question)).toEqual([
+    "D'où viennent les chiffres ?",
+    "Combien coûte AVERO ?",
+  ]);
+  expect(faqForTopic("OTHER")).toEqual([]);
+  expect(faqForTopic(undefined)).toEqual([]);
 });

@@ -10,38 +10,45 @@ export const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-export const FAQ_ITEMS: { question: string; answer: string; icon: IconName }[] = [
+/** `audience` : profil pour lequel la question est proposée en réponse rapide sur la page Contact. */
+export const FAQ_ITEMS: { question: string; answer: string; icon: IconName; audience: "CREATOR" | "BRAND" | "ALL" }[] = [
   {
     icon: "link",
+    audience: "BRAND",
     question: "D'où viennent les chiffres ?",
     answer:
       "Directement d'Instagram et de TikTok. Le créateur relie ses comptes et AVERO lit ses statistiques par les accès officiels des réseaux : personne ne peut les saisir ni les modifier à la main.",
   },
   {
     icon: "globe",
+    audience: "ALL",
     question: "Quels réseaux sont pris en charge ?",
     answer: "Instagram et TikTok. D'autres réseaux pourront suivre.",
   },
   {
     icon: "instagram",
+    audience: "CREATOR",
     question: "Faut-il un compte Instagram professionnel ?",
     answer:
       "Oui. Instagram ne partage les statistiques que des comptes Créateur ou Entreprise. Le passage en compte professionnel est gratuit et prend une minute dans l'application Instagram.",
   },
   {
     icon: "bolt",
+    audience: "BRAND",
     question: "Combien coûte AVERO ?",
     answer:
       `Rien pour les créateurs. Pour les marques, le plan Free est gratuit ; Basic coûte ${PLAN_MONTHLY_PRICE_EUR.BASIC}\u00a0€ par mois et Premium ${PLAN_MONTHLY_PRICE_EUR.PREMIUM}\u00a0€ par mois, hors taxes.`,
   },
   {
     icon: "shield",
+    audience: "CREATOR",
     question: "Que voient les marques de mes données ?",
     answer:
       "Uniquement des statistiques : vues, abonnés, engagement et, en Premium, la répartition de l'audience (âge, sexe, pays). Jamais vos messages ni vos identifiants.",
   },
   {
     icon: "unlink",
+    audience: "CREATOR",
     question: "Puis-je déconnecter un réseau ?",
     answer:
       "Oui, à tout moment depuis « Mes réseaux ». Les données de ce réseau sont alors supprimées d'AVERO.",
