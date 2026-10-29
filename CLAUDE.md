@@ -8,3 +8,4 @@ Quand une étape fonctionne, propose un commit avec un message clair en Françai
 - pnpm run dev : lancer l'app sur http://localhost.3000
 - pnpm run build : vérifier avant de publier
 
+Ne jamais mettre de long tiret
